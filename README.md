@@ -1,4 +1,4 @@
 # OSCAT website
 
 The OSCAT landing page, published with GitHub Pages from this branch.
-The OSCAT code and releases live in the oscat-dev repository.
+Releases are copied here from the private oscat-dev repository by the Publish release workflow.
