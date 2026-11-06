@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSCAT · One Stop CIS Benchmark Auditing Tool</title>
+<meta name="description" content="OSCAT is an agentless, offline tool that audits servers, databases and network devices against CIS benchmarks and produces client-ready Excel and PDF reports.">
+<meta property="og:title" content="OSCAT · One Stop CIS Benchmark Auditing Tool">
+<meta property="og:description" content="Audit every host against CIS benchmarks, from one place.">
+<meta property="og:image" content="assets/oscat-scan.png">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<style>
+:root{--brand:#074054;--brand-2:#0b5c78;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.5}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;padding:13px 26px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.hero{background:linear-gradient(160deg,var(--brand),var(--brand-2));color:var(--ink)}
+nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+nav img{height:44px;display:block}
+nav .links a{margin-left:28px;text-decoration:none;font-size:15px;font-weight:500;color:var(--ink)}
+nav .links a:hover{color:#fff;text-decoration:underline}
+.htext{text-align:center;padding:56px 0 44px}
+.htext h1{font-size:clamp(30px,5vw,48px);color:#fff;line-height:1.15;margin-bottom:18px}
+.htext p{font-size:clamp(16px,2vw,19px);max-width:720px;margin:0 auto 32px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.b1{background:var(--ink);color:var(--brand)}
+.b2{border:1px solid var(--ink);color:var(--ink)}
+.shot{display:block;width:100%;max-width:960px;margin:0 auto;border-radius:12px 12px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.3);height:auto}
+h2{font-size:clamp(24px,3.5vw,32px);color:var(--brand);text-align:center;margin-bottom:8px}
+.sub{color:var(--muted);text-align:center;margin-bottom:36px;font-size:17px}
+section{padding:72px 0}
+.diff{background:var(--soft);border-bottom:1px solid var(--line)}
+.dgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.ditem{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:20px 22px}
+.ditem h3{color:var(--brand);font-size:17px;margin-bottom:4px}
+.ditem p{font-size:15px;color:var(--muted)}
+.check{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{border:1px solid var(--line);border-radius:12px;padding:24px;background:#fff}
+.card .ic{width:40px;height:40px;border-radius:9px;background:var(--ink);color:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:14px}
+.card h3{font-size:17px;color:var(--brand);margin-bottom:6px}
+.card p{font-size:14px;color:var(--muted)}
+.platforms{padding-top:0}
+.bench{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chip{padding:8px 16px;border-radius:20px;background:var(--soft);border:1px solid var(--line);font-size:14px;color:var(--brand)}
+.get{background:linear-gradient(160deg,var(--brand),var(--brand-2));color:var(--ink);text-align:center}
+.get h2{color:#fff}
+.get p{margin:0 auto 28px;max-width:640px}
+footer{background:#052f3e;color:var(--ink);padding:26px 0;font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer a{text-decoration:none;margin-left:16px}
+footer a:hover{text-decoration:underline}
+@media (max-width:860px){
+  .features{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  nav .links a:not(.keep){display:none}
+  nav .links a{margin-left:0}
+  nav img{height:38px}
+  .dgrid,.features{grid-template-columns:1fr}
+  section{padding:52px 0}
+  footer a{margin:0 16px 0 0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav>
+      <a href="./" aria-label="OSCAT home"><img src="assets/logo.svg" alt="OSCAT · One Stop CIS Benchmark Auditing Tool"></a>
+      <div class="links">
+        <a href="#different">Why OSCAT</a>
+        <a href="#features">Features</a>
+        <a href="#platforms">Platforms</a>
+        <a class="keep" href="https://github.com/abiesholihin/oscat-dev/wiki">Docs</a>
+      </div>
+    </nav>
+    <div class="htext">
+      <h1>Audit every host against<br>CIS benchmarks, from one place</h1>
+      <p>OSCAT is an agentless, offline audit tool for servers, databases and network devices. Scan hundreds of hosts and hand clients ready-made reports.</p>
+      <div class="cta">
+        <a class="btn b1" href="https://github.com/abiesholihin/oscat-dev/releases/latest">Download latest release</a>
+        <a class="btn b2" href="https://github.com/abiesholihin/oscat-dev/wiki">Read the docs</a>
+      </div>
+    </div>
+    <picture>
+      <source srcset="assets/oscat-scan.webp" type="image/webp">
+      <img class="shot" src="assets/oscat-scan.png" width="1360" height="540" alt="An OSCAT scan of five hosts with pass, fail, manual, N/A and skipped results">
+    </picture>
+  </div>
+</header>
+
+<main>
+<section class="diff" id="different">
+  <div class="wrap">
+    <h2>What makes OSCAT different</h2>
+    <p class="sub">Things most compliance scanners can't do</p>
+    <div class="dgrid">
+      <div class="ditem"><div class="check">✓</div><div><h3>Import directly from the CIS benchmark PDF</h3><p>Upload any CIS benchmark PDF and scan right away. When CIS releases a new version, you import it yourself the same day.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Customizable controls</h3><p>Change parameters and pass rules, add your own controls, combine controls from other benchmarks, and pick exactly which controls to run.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>CIS PDF to Excel working paper</h3><p>Download any benchmark or control set as an Excel working paper for manual audits.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Offline collector</h3><p>Hand a readable script to hosts OSCAT can't reach, then upload the results to any OSCAT install.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Audit network devices offline</h3><p>Can't log in to a router, switch or firewall? Upload its running config or a saved terminal session and OSCAT audits it.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Evidence behind every finding</h3><p>The exact command, its raw output and the actual setting, so every result can be defended.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Reach hosts behind an SSH bastion</h3><p>Scan servers in isolated zones through a bastion host, with nothing to set up on the targets.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Scan comparison</h3><p>Compare a rescan with the last audit: what was fixed, what regressed and what is still failing.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Every result explained</h3><p>No unexplained N/A or skipped controls. Each one states why, and which control it depends on.</p></div></div>
+      <div class="ditem"><div class="check">✓</div><div><h3>Controls that follow the benchmark</h3><p>Several checks per control with AND/OR logic, and dependencies between controls.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <h2>Everything an audit needs</h2>
+    <p class="sub">From the first scan to the client report</p>
+    <div class="features">
+      <div class="card"><div class="ic">1</div><h3>Agentless scanning</h3><p>Log in over SSH, WinRM, database or device CLI. Nothing is installed on audited hosts.</p></div>
+      <div class="card"><div class="ic">2</div><h3>Saved control sets</h3><p>Save named choices of controls per benchmark and reuse them for scans and collectors.</p></div>
+      <div class="card"><div class="ic">3</div><h3>Web app and command line</h3><p>Run scans from the browser, or script them with the oscat command line.</p></div>
+      <div class="card"><div class="ic">4</div><h3>Privilege escalation</h3><p>sudo, su, dzdo, doas, pbrun, pmrun and network enable mode.</p></div>
+      <div class="card"><div class="ic">5</div><h3>Grouped multi-host scans</h3><p>Scan tens to hundreds of hosts, follow them live, cancel or rescan in one click.</p></div>
+      <div class="card"><div class="ic">6</div><h3>Client-ready reports</h3><p>Excel, PDF and CSV for the whole scan or one host, with a cover page and dashboard.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="platforms" id="platforms">
+  <div class="wrap">
+    <h2>Supported platforms</h2>
+    <p class="sub">Import the CIS benchmarks you need</p>
+    <div class="bench">
+      <span class="chip">Ubuntu</span><span class="chip">SUSE / RHEL</span><span class="chip">Windows Server</span>
+      <span class="chip">PostgreSQL</span><span class="chip">MySQL / MariaDB</span><span class="chip">SQL Server</span><span class="chip">Oracle</span><span class="chip">MongoDB</span>
+      <span class="chip">Cisco IOS XE / XR / NX-OS</span><span class="chip">Cisco ASA</span><span class="chip">Juniper</span><span class="chip">Arista</span><span class="chip">Aruba CX</span><span class="chip">Extreme SLX</span><span class="chip">Cisco APIC</span>
+    </div>
+  </div>
+</section>
+
+<section class="get">
+  <div class="wrap">
+    <h2>Get OSCAT</h2>
+    <p>Installers for Windows Server, RHEL and SUSE (RPM), Ubuntu and Debian (DEB) and Docker, plus portable Windows and Linux builds that install nothing. Every download works without internet access.</p>
+    <div class="cta">
+      <a class="btn b1" href="https://github.com/abiesholihin/oscat-dev/releases/latest">Download latest release</a>
+      <a class="btn b2" href="https://github.com/abiesholihin/oscat-dev/wiki/Installation">Installation guide</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</span>
+    <span><a href="https://github.com/abiesholihin/oscat-dev/releases">Releases</a><a href="https://github.com/abiesholihin/oscat-dev/wiki">Documentation</a><a href="https://github.com/abiesholihin/oscat-dev">GitHub</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
