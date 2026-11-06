@@ -1,0 +1,204 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Running scans · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="running-scans">Running scans</h1>
+<h2 id="start-a-scan">Start a scan</h2>
+<p>On <strong>Scans → New scan</strong>:</p>
+<ol>
+<li>Give the scan a <strong>name</strong>, such as <code>Q4 web servers</code>, and pick the <strong>profile</strong> (the
+   benchmark to audit against).</li>
+<li>Type the hosts into <strong>Hosts</strong>: IP addresses, host names, ranges such as <code>10.0.0.5-20</code>
+   or <code>10.0.0.5-10.0.1.9</code>, or subnets such as <code>10.0.0.0/24</code>. Separate them with spaces,
+   commas or new lines. OSCAT shows how many hosts that is, and points out anything it
+   cannot read.</li>
+<li>Under <strong>Login</strong>, choose the <strong>login credential</strong> (and, for SSH, the privilege
+   escalation). One login is used for every host of the scan, typed or saved, and for a
+   group too. The connection follows the benchmark: a Windows benchmark logs in over
+   WinRM, Linux over SSH, a network benchmark over the device CLI or the APIC REST API, a
+   database benchmark to the database. Administrators can add a credential right there
+   with <strong>+ Add a credential…</strong>, the last entry of the credential list. Rarely needed
+   settings, such as an SSH bastion or the Windows authentication type, are under
+   <strong>Advanced</strong>.</li>
+<li>Start the scan.</li>
+</ol>
+<p>The scan keeps its login only so <strong>Run again</strong> uses the same one; hosts don't store a
+login. Hosts you type are saved as targets, so they show up on the <strong>Targets</strong> page. A
+host that is already saved (typed by its name or address) is outlined in the host list.</p>
+<p>You can also tick saved <strong>groups</strong> and <strong>targets</strong> under <strong>Saved targets and groups</strong>,
+together with typed hosts or instead of them. A host listed twice is scanned once. Saved
+targets on another platform than the benchmark's are greyed out, with the reason.</p>
+<h3 id="when-logins-are-refused">When logins are refused</h3>
+<p>A wrong password tried on many hosts can lock the account or look like a brute-force
+attack to your SOC. So until one host accepts the login, OSCAT logs in to one host at a
+time, and after <strong>3 hosts in a row refuse the login</strong> it stops starting new logins for
+that scan. The remaining hosts are marked <strong>not attempted</strong>, with the reason. Hosts that
+can't be reached don't count. Fix the credential and run the scan again. An administrator
+can change the number with the <code>OSCAT_LOGIN_REFUSAL_LIMIT</code> setting (<code>0</code> turns it off).</p>
+<p>Under <strong>Controls</strong>, the scan runs the whole profile by default. To run fewer, pick a saved
+<a href="Profiles.html#control-sets">control set</a> from the list, or click <strong>Choose controls</strong> and tick
+them: by section, by searching a number or a word, or with the quick picks (<strong>Level 1</strong>,
+<strong>Level 2</strong>, <strong>Automated only</strong>, <strong>All</strong>, <strong>None</strong>). A control that a ticked control depends
+on is ticked too, with a note saying which control needs it. An auditor can keep a choice
+for later with <strong>Save as control set…</strong>. Controls left out show as <strong>Excluded</strong> in the
+results and reports.</p>
+<p>To pick many controls at once from your own checklist, click <strong>Filter by a pasted list…</strong>
+and paste one control per line, straight from Excel: a number, a title, or both. When a
+line has a title, the title decides, so a checklist with its own numbering still matches.
+Choose <strong>Show these</strong> or <strong>Show all except these</strong>, then <strong>Tick all shown</strong> or <strong>Untick
+all shown</strong>. Lines that match nothing are listed under the box, with the closest control
+as a suggestion you can accept with <strong>Use it</strong>. The same box is in the offline collector
+and control set screens.</p>
+<p><img alt="New scan" src="images/2-new-scan.png" /></p>
+<p>Scans run in the background, up to <code>OSCAT_MAX_PARALLEL_HOSTS</code> hosts at a time (50 by
+default), with a few checks in parallel on each host. The Scans list and the scan page
+show progress while it runs. You can leave the page and come back; an auditor can
+<strong>Cancel scan</strong> while it runs, and an administrator can <strong>Delete</strong> a finished scan.</p>
+<p>To scan the same hosts again, open the scan and click <strong>Rescan</strong>. It starts a new scan
+with the same name, profile, controls and hosts; the earlier results stay as they were.
+Hosts deleted from Targets since are left out, and groups pick up their current members.</p>
+<h2 id="compare-with-a-previous-scan">Compare with a previous scan</h2>
+<p>After a rescan (or any finished scan) you can see what changed since each host was last
+audited. On the scan page click <strong>Compare with previous</strong>. By default every host is
+matched to its own most recent earlier result for the same benchmark, from any scan or
+offline upload, so you see what was remediated and what is still open on that host. You can
+instead pick one earlier scan to compare against, or turn the comparison off again.</p>
+<p><img alt="Comparison summary" src="images/scan-compare.png" /></p>
+<p>The comparison shows the compliance score before and after, and how many controls were:</p>
+<ul>
+<li><strong>Fixed</strong> — failed or errored before, pass now;</li>
+<li><strong>Regressed</strong> — passed before, fail or error now;</li>
+<li><strong>Still failing</strong> — failing both times.</li>
+</ul>
+<p>Each host has its own before/after score and counts. Click <strong>view changes</strong> on a host to
+see every control that changed, with its result before and after and the current
+observation. A host with no earlier result is shown as a first audit, with nothing to
+compare. Controls that exist in only one benchmark version are marked <strong>New control</strong> or
+<strong>Removed</strong>.</p>
+<p>Download the comparison as its own Excel workbook or PDF with the links on the summary (or
+with the format on the end of the scan's comparison URL). The Excel has four sheets: a
+cover, a dashboard, a <strong>Comparison</strong> sheet with one row per control per host, and a
+<strong>Details</strong> sheet with the full current results. The cover and dashboard totals are
+formulas over the Comparison sheet, so you can delete the Details sheet and the numbers
+still add up. The normal scan reports are unchanged.</p>
+<h2 id="read-the-results">Read the results</h2>
+<p>The scan page has the totals across all hosts, and two views.</p>
+<p><strong>By host</strong>: one row per host with its address, groups, score, a bar of results, the
+number of failures and errors, and links to that host's own PDF and Excel report. A host
+that could not be reached shows the connection error instead of results.</p>
+<p><img alt="Results by host" src="images/3-scan-by-host.png" /></p>
+<p><strong>By control</strong>: one row per control with how many hosts passed, failed or errored, and
+which hosts failed. Use it to see which settings fail across the estate.</p>
+<p><img alt="Results by control" src="images/4-scan-by-control.png" /></p>
+<h2 id="the-evidence-for-one-host">The evidence for one host</h2>
+<p>Click a host to see every control with its result. Filter by state, or type to find a
+control. Open a control to see each check: the command that ran, whether it ran as the
+login user or through privilege escalation, the exit code, how long it took, the output,
+and what the assertion expected. For a control with several checks, the line
+<code>failed checks: ...</code> names the checks that made it fail.</p>
+<p><img alt="Evidence for one host" src="images/5-host-evidence.png" /></p>
+<p>The score is the share of passed controls among those that were judged automatically
+(pass and fail).</p>
+<h2 id="result-states">Result states</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pass</strong></td>
+<td>meets the control</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><strong>Fail</strong></td>
+<td>does not meet the control</td>
+<td>remediate, or record an exception</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>evidence could not be collected or judged</td>
+<td>open the evidence: a missing command, a permission problem, or a failed <code>sudo</code> usually shows there</td>
+</tr>
+<tr>
+<td><strong>N/A</strong></td>
+<td>does not apply to this host</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><strong>Skipped</strong></td>
+<td>a control it depends on did not reach the required result; the Observation names that control and its result</td>
+<td>look at that control first</td>
+</tr>
+<tr>
+<td><strong>Manual</strong></td>
+<td>needs a human judgement</td>
+<td>review the evidence and the benchmark's audit text</td>
+</tr>
+<tr>
+<td><strong>Excluded</strong></td>
+<td>left out of this scan on purpose</td>
+<td>nothing; it is not counted in the score</td>
+</tr>
+</tbody>
+</table>
+<h2 id="re-judging-without-rescanning">Re-judging without rescanning</h2>
+<p>The evidence is kept with the results, so when a profile check was wrong you can fix the
+profile and re-judge the saved evidence without touching the hosts again, from the command
+line:</p>
+<pre><code class="language-bash">oscat evaluate results.json -p fixed-profile.yaml -o results-v2.json
+</code></pre>
+<h2 id="hosts-the-jumphost-cannot-reach">Hosts the jumphost cannot reach</h2>
+<p>Use the <a href="Offline-Collector.html">offline collector</a> and <strong>Scans → Upload collected results</strong>.
+The uploaded files become a normal scan with the same views and reports.</p>
+<h2 id="scanning-from-the-command-line">Scanning from the command line</h2>
+<pre><code class="language-bash">export OSCAT_SSH_PASSWORD=...
+oscat scan -p profiles/cis-ubuntu-22.04/profile.yaml -i inventory.yaml -g web -o results.json --csv results.csv
+oscat report results.json --failures
+</code></pre>
+<p><code>-g</code> (group) and <code>-H</code> (host) can be repeated, <code>-c</code> limits the controls. See
+<a href="Command-Line.html">Command line</a> and the inventory format in
+<a href="Credentials-and-Targets.html#inventory-files-command-line">Credentials and targets</a>.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

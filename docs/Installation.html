@@ -1,0 +1,259 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installation · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="installation">Installation</h1>
+<p>OSCAT is agentless: it runs on one machine (the jumphost) and logs in to the hosts it
+audits. Nothing is installed on those hosts.</p>
+<h2 id="choose-an-installer">Choose an installer</h2>
+<p>Every release on the <a href="https://github.com/abiesholihin/oscat/releases">Releases page</a>
+(tags look like <code>v0.1.0-85</code>) has these files and a <code>SHA256SUMS</code> file to check them with:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>For</th>
+<th>Needs on the jumphost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oscat-&lt;version&gt;.x86_64.rpm</code></td>
+<td>RHEL, Rocky, Alma 8+, SUSE (SLES 15 SP3+)</td>
+<td>systemd, glibc 2.28+</td>
+</tr>
+<tr>
+<td><code>oscat_&lt;version&gt;_amd64.deb</code></td>
+<td>Ubuntu 20.04+, Debian 10+</td>
+<td>systemd, glibc 2.28+</td>
+</tr>
+<tr>
+<td><code>oscat-&lt;version&gt;-docker.run</code></td>
+<td>any Linux with Docker and Compose v2</td>
+<td>Docker</td>
+</tr>
+<tr>
+<td><code>oscat-&lt;version&gt;-setup.exe</code></td>
+<td>Windows Server 2016+, Windows 10+ (x64)</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><code>oscat-&lt;version&gt;-portable-linux-x86_64.tar.gz</code></td>
+<td>any 64-bit Linux, no install</td>
+<td>glibc 2.28+</td>
+</tr>
+<tr>
+<td><code>oscat-&lt;version&gt;-portable-windows-x64.zip</code></td>
+<td>Windows Server 2016+, Windows 10+, no install</td>
+<td>nothing</td>
+</tr>
+</tbody>
+</table>
+<p>The two <strong>portable</strong> downloads install nothing: you unpack them and run OSCAT from the
+folder, with its data kept inside that same folder. They suit a client jumphost that
+forbids installing software or where you have no administrator rights. See
+<a href="#portable-no-install">Portable (no install)</a> below.</p>
+<p>Each one is complete, so the jumphost needs <strong>no internet access</strong> and nothing else
+installed first. It ships with no benchmarks: you import your own on the Benchmarks page
+(or by importing a CIS PDF) after the first run. Download on a connected machine, check
+the file, and copy it across:</p>
+<pre><code class="language-bash">sha256sum -c SHA256SUMS --ignore-missing
+</code></pre>
+<p>The jumphost needs network access to the audited hosts: SSH (22), WinRM (5986, or 5985
+over HTTP) and HTTPS (443) for APICs. Browsers reach OSCAT on <strong>https://&lt;jumphost&gt;:8443</strong>.</p>
+<h2 id="linux-package-rpm-deb">Linux package (.rpm / .deb)</h2>
+<pre><code class="language-bash">sudo dnf install ./oscat-*.x86_64.rpm                          # RHEL, Rocky, Alma
+sudo zypper install --allow-unsigned-rpm ./oscat-*.x86_64.rpm   # SUSE
+sudo apt install ./oscat_*_amd64.deb                           # Ubuntu, Debian
+</code></pre>
+<p>The package:</p>
+<ul>
+<li>creates an <code>oscat</code> system user;</li>
+<li>creates the master key <code>/etc/oscat/master.key</code>, which encrypts stored passwords and keys;</li>
+<li>creates a self-signed HTTPS certificate in <code>/etc/oscat/tls/</code>;</li>
+<li>prepares its data folder <code>/var/lib/oscat</code>;</li>
+<li>starts the <code>oscat</code> service (and enables it at boot);</li>
+<li>prints a <strong>setup code</strong> for the first administrator:</li>
+</ul>
+<pre><code>OSCAT is installed. Open https://jumphost.example:8443 in a browser and create the first
+administrator with this setup code:
+
+    9b7b-93a3-9c7e-caa2
+</code></pre>
+<p>Continue with <a href="First-Run-and-Administration.html">First run and administration</a>.</p>
+<p>If browsers connect from other machines, open port 8443:</p>
+<pre><code class="language-bash">sudo firewall-cmd --add-port=8443/tcp --permanent &amp;&amp; sudo firewall-cmd --reload   # RHEL, SUSE
+sudo ufw allow 8443/tcp                                                           # Ubuntu
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Program</td>
+<td><code>/opt/oscat</code></td>
+</tr>
+<tr>
+<td>Settings</td>
+<td><code>/etc/oscat/oscat.env</code></td>
+</tr>
+<tr>
+<td>Master key</td>
+<td><code>/etc/oscat/master.key</code></td>
+</tr>
+<tr>
+<td>Certificate</td>
+<td><code>/etc/oscat/tls/cert.pem</code>, <code>key.pem</code></td>
+</tr>
+<tr>
+<td>Data (scans, targets, profiles)</td>
+<td><code>/var/lib/oscat</code></td>
+</tr>
+<tr>
+<td>Service</td>
+<td><code>systemctl status oscat</code>, logs with <code>journalctl -u oscat</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Upgrade</strong> by installing a newer package the same way; it keeps the key, settings and
+data, and restarts the service. <strong>Uninstall</strong> with
+<code>dnf remove oscat</code> or <code>apt remove oscat</code>; <code>/etc/oscat</code> and <code>/var/lib/oscat</code> stay until you
+delete them.</p>
+<h2 id="docker-installer-run">Docker installer (.run)</h2>
+<p>On any Linux host with Docker and Compose v2:</p>
+<pre><code class="language-bash">sudo sh oscat-*-docker.run              # installs in /opt/oscat-docker on port 8443
+sudo sh oscat-*-docker.run --dir /srv/oscat --port 9443   # elsewhere
+</code></pre>
+<p>It carries everything OSCAT needs, so it also needs no internet. It writes its settings to
+<code>/opt/oscat-docker/.env</code>, creates the master key and a self-signed certificate, starts OSCAT
+and prints the setup code. The containers restart with Docker at boot.</p>
+<ul>
+<li>Settings: <code>/opt/oscat-docker/.env</code>, then <code>docker compose up -d</code> in that folder.</li>
+<li>Upgrade: run a newer <code>.run</code> file the same way; data, key and settings are kept.</li>
+<li>Uninstall: <code>sudo sh /opt/oscat-docker/uninstall.sh</code> keeps the data; add <code>--purge</code> to
+  delete it too.</li>
+</ul>
+<h2 id="windows-installer-exe">Windows installer (.exe)</h2>
+<p>Run <code>oscat-&lt;version&gt;-setup.exe</code> as an administrator. It installs OSCAT in
+<code>C:\Program Files\OSCAT</code>, keeps settings, key, certificate and data in
+<code>C:\ProgramData\OSCAT</code> (readable by administrators and the service only), opens TCP 8443 in
+Windows Firewall and starts the <strong>OSCAT</strong> Windows service. The last page shows the address
+and the setup code.</p>
+<ul>
+<li>Settings: <code>C:\ProgramData\OSCAT\oscat.env</code> (Start menu: <em>OSCAT settings</em>), then
+  <code>Restart-Service OSCAT</code>. Logs are in <code>C:\ProgramData\OSCAT\logs</code>.</li>
+<li>Unattended: <code>oscat-&lt;version&gt;-setup.exe /VERYSILENT /SUPPRESSMSGBOXES</code>; the setup code is
+  then only in <code>C:\ProgramData\OSCAT\setup-code</code>.</li>
+<li>The installer adds <code>oscat</code> and <code>oscat-server</code> to the system PATH.</li>
+<li>Upgrade by running a newer installer; uninstall from <em>Apps</em> or <em>Programs and Features</em>.
+  Both keep <code>C:\ProgramData\OSCAT</code>.</li>
+<li>A Windows jumphost scans Linux over SSH, Windows over WinRM and APICs over HTTPS. It
+  cannot scan itself as a "This server (local)" target.</li>
+</ul>
+<h2 id="portable-no-install">Portable (no install)</h2>
+<p>The portable downloads run OSCAT from a folder without installing anything, which is useful
+on a client jumphost that forbids installing software or where you have no administrator
+rights. Like the installers they carry their own Python, every library and the browser UI,
+so they need no internet. They ship with no benchmarks: you import your own after the first
+run.</p>
+<p><strong>Linux</strong> (<code>oscat-&lt;version&gt;-portable-linux-x86_64.tar.gz</code>):</p>
+<pre><code class="language-bash">tar -xzf oscat-*-portable-linux-x86_64.tar.gz
+cd oscat
+./start.sh
+</code></pre>
+<p><strong>Windows</strong> (<code>oscat-&lt;version&gt;-portable-windows-x64.zip</code>): unzip it and run <code>start.cmd</code>
+(double-click, or run it in a command prompt).</p>
+<p>The first run creates a <code>data/</code> folder, a self-signed certificate and a <strong>setup code</strong>,
+then serves the web UI on <strong>https://localhost:8443</strong>. Open that address and create the first
+administrator with the setup code shown, then continue with
+<a href="First-Run-and-Administration.html">First run and administration</a>. Stop the server with
+Ctrl+C (Linux) or by closing the window (Windows).</p>
+<ul>
+<li>The portable copy listens on <strong>localhost only</strong> by default. To reach it from other
+  machines, start it with <code>OSCAT_LISTEN=0.0.0.0</code> set and open port 8443 in the firewall.</li>
+<li>Administer it with <code>oscat-server</code> and scan from the command line with <code>oscat</code>, run from
+  the folder (<code>./oscat-server.sh</code> and <code>./oscat</code> on Linux; <code>oscat-server.cmd</code> and
+  <code>oscat.cmd</code> on Windows). For example <code>./oscat-server.sh create-user alice --role auditor</code>.</li>
+<li>Everything is in the folder's <code>data/</code>: the database, the master key (<code>data/master.key</code>)
+  and the certificate. <strong>Back up <code>data/master.key</code></strong> separately; without it, stored
+  credentials cannot be decrypted.</li>
+<li><strong>Upgrade</strong> by unpacking a newer portable over the folder (or copy your <code>data/</code> folder
+  into the new one); your settings, scans and credentials are kept.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Program</td>
+<td>the unpacked folder (<code>python/</code>, <code>ui/</code>)</td>
+</tr>
+<tr>
+<td>Data, key, certificate</td>
+<td><code>data/</code> inside that folder</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>environment variables set by the launchers (<code>oscat-env.sh</code> / <code>oscat-env.cmd</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="optional-a-local-ai-model-for-pdf-import">Optional: a local AI model for PDF import</h2>
+<p>PDF import works without a model. To let a local AI model improve the drafts OSCAT was
+unsure about, install <a href="https://ollama.com">Ollama</a> on the jumphost, copy in a model pulled
+on a connected machine (<code>ollama pull qwen2.5:7b</code>, then copy <code>~/.ollama/models</code>), and set in
+the settings file:</p>
+<pre><code>OSCAT_IMPORT_LLM=ollama
+OSCAT_IMPORT_MODEL=qwen2.5:7b
+OSCAT_OLLAMA_URL=http://127.0.0.1:11434
+</code></pre>
+<p>A 7B model fits on 12 GB of RAM without a GPU; <code>qwen2.5:14b</code> drafts better with more
+memory. For Docker installs, start Ollama with <code>OLLAMA_HOST=0.0.0.0</code> so the containers can
+reach it. See <a href="Importing-CIS-PDFs.html">Importing a CIS benchmark PDF</a>.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

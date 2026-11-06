@@ -1,0 +1,155 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="troubleshooting">Troubleshooting</h1>
+<h2 id="the-web-page-does-not-open">The web page does not open</h2>
+<ul>
+<li>Check the service: <code>systemctl status oscat</code> and <code>journalctl -u oscat -n 50</code>
+  (Windows: <code>Get-Service OSCAT</code> and <code>C:\ProgramData\OSCAT\logs</code>; Docker:
+  <code>cd /opt/oscat-docker &amp;&amp; docker compose ps</code> and <code>docker compose logs api</code>).</li>
+<li>Use <strong>https</strong>, not http, and port 8443 (or the <code>OSCAT_PORT</code> you set).</li>
+<li>From another machine, open port 8443 in the jumphost's firewall
+  (see <a href="Installation.html#linux-package-rpm--deb">Installation</a>).</li>
+<li>The browser's certificate warning is expected with the self-signed certificate; install
+  your own certificate to remove it (<a href="First-Run-and-Administration.html#using-your-own-certificate">settings</a>).</li>
+</ul>
+<h2 id="i-lost-the-setup-code">I lost the setup code</h2>
+<p>It is in <code>/var/lib/oscat/setup-code</code> (Windows: <code>C:\ProgramData\OSCAT\setup-code</code>; Docker:
+<code>docker compose exec api cat /var/lib/oscat/setup-code</code>). It disappears once the first
+administrator exists; after that, add administrators with
+<code>sudo oscat-server create-user &lt;name&gt; --role admin</code>.</p>
+<h2 id="a-host-shows-a-connection-error">A host shows a connection error</h2>
+<p>The host table shows the reason. Common ones:</p>
+<table>
+<thead>
+<tr>
+<th>Message mentions</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>timeout, connection refused</td>
+<td>network path and firewall from the jumphost to port 22 / 5986 / 5985 / 443</td>
+</tr>
+<tr>
+<td>authentication failed</td>
+<td>the credential's user name and password or key; for WinRM, the authentication type</td>
+</tr>
+<tr>
+<td>host key changed / unknown</td>
+<td>the host was rebuilt (click <strong>forget pinned key</strong> on the Targets page), or <strong>Strict</strong> is set and the key is not known yet</td>
+</tr>
+<tr>
+<td>WinRM certificate has changed</td>
+<td>the certificate was renewed: click <strong>forget pinned key</strong> on the Targets page, or check why it changed</td>
+</tr>
+<tr>
+<td>certificate verify failed</td>
+<td><code>OSCAT_CA_BUNDLE</code>, or the scan's certificate check setting</td>
+</tr>
+<tr>
+<td>not attempted</td>
+<td>3 hosts in a row refused the login, so the scan stopped logging in; fix the credential and run it again</td>
+</tr>
+</tbody>
+</table>
+<h2 id="many-controls-are-error">Many controls are "Error"</h2>
+<p>Open one in the host's evidence; the check shows the reason.</p>
+<ul>
+<li><strong>Privilege escalation failed</strong> (wrong <code>sudo</code> password, user not in sudoers, <code>su</code> needs a
+  different password): fix the scan's become settings or credential. Only checks marked
+  <code>privilege: root</code> are affected.</li>
+<li><strong>Command not found</strong>: the host lacks a tool the check uses; the profile may need a
+  different command for this OS.</li>
+<li><strong>Permission denied</strong> without escalation: the target has no become method, but the check
+  needs root.</li>
+</ul>
+<p>After fixing the profile, re-judge saved results with <code>oscat evaluate</code> instead of
+rescanning (<a href="Running-Scans.html#re-judging-without-rescanning">Running scans</a>).</p>
+<h2 id="an-uploaded-collector-file-is-refused">An uploaded collector file is refused</h2>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>collected on another OS</td>
+<td>the wrong collector was run; issue one for that OS, or tick <em>Accept files collected on another OS</em> if you are sure</td>
+</tr>
+<tr>
+<td>files come from different collectors</td>
+<td>upload each collector's files separately</td>
+</tr>
+<tr>
+<td>collected after this collector stopped working</td>
+<td>the host's clock was past the end date; extend the collector, download the script again and collect again</td>
+</tr>
+<tr>
+<td>revoked</td>
+<td>OSCAT no longer accepts its results; issue a new collector and collect again</td>
+</tr>
+<tr>
+<td>signature does not match</td>
+<td>the file was edited or truncated; collect again</td>
+</tr>
+<tr>
+<td>written by a collector this OSCAT did not issue</td>
+<td>the collector came from another OSCAT server, or its record was deleted</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pdf-import-finds-few-controls-or-drafts-poorly">PDF import finds few controls or drafts poorly</h2>
+<ul>
+<li>Use the original CIS PDF, not a scanned or printed copy.</li>
+<li>Every control starts as <code>review: needed</code>; low confidence is normal for controls whose
+  audit depends on site policy.</li>
+<li>A local model improves drafts (<a href="Importing-CIS-PDFs.html#setting-up-the-local-model">setup</a>).
+  If it is set but unused, check that Ollama is running and <code>OSCAT_OLLAMA_URL</code> reaches it.</li>
+</ul>
+<h2 id="stored-credentials-cannot-be-decrypted">Stored credentials cannot be decrypted</h2>
+<p>The master key does not match the data, for example after restoring the data without
+its key. Restore the matching <code>master.key</code>; without it, re-enter the credentials.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

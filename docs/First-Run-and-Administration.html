@@ -1,0 +1,227 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First run and administration · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="first-run-and-administration">First run and administration</h1>
+<h2 id="create-the-first-administrator">Create the first administrator</h2>
+<p>After installing, open <strong>https://&lt;jumphost&gt;:8443</strong> in a browser. The certificate is
+self-signed, so the browser warns once; accept it (or install your own certificate, below).</p>
+<p>The login page asks for the <strong>setup code</strong> the installer printed, and the first
+administrator's name and password (12 characters or more). The code works once. If you
+missed it, it is in:</p>
+<table>
+<thead>
+<tr>
+<th>Install</th>
+<th>Setup code file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.rpm</code> / <code>.deb</code></td>
+<td><code>/var/lib/oscat/setup-code</code></td>
+</tr>
+<tr>
+<td>Docker <code>.run</code></td>
+<td><code>cd /opt/oscat-docker &amp;&amp; docker compose exec api cat /var/lib/oscat/setup-code</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>C:\ProgramData\OSCAT\setup-code</code></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Create the administrator" src="images/0-first-run-setup.png" /></p>
+<p>After that, the page is a normal sign-in page.</p>
+<p><img alt="Sign in" src="images/1-login.png" /></p>
+<h2 id="the-first-steps">The first steps</h2>
+<ol>
+<li><strong>Credentials</strong>: add the SSH, WinRM or APIC accounts OSCAT logs in with
+   (<a href="Credentials-and-Targets.html">Credentials and targets</a>).</li>
+<li><strong>Targets</strong>: add the hosts, pick their connection and credential, and put them in groups.</li>
+<li><strong>Benchmarks</strong>: upload a benchmark, or import a CIS benchmark PDF on the
+   <strong>Imports</strong> page (<a href="Profiles.html">Profiles</a>, <a href="Importing-CIS-PDFs.html">Importing a CIS benchmark PDF</a>).</li>
+<li><strong>Scans</strong>: pick a benchmark and targets or groups, run the scan, and download the reports
+   (<a href="Running-Scans.html">Running scans</a>, <a href="Reports.html">Reports</a>).</li>
+</ol>
+<h2 id="users-and-roles">Users and roles</h2>
+<p>Administrators add users on the <strong>Users</strong> page, or on the server with
+<code>oscat-server create-user &lt;name&gt; --role &lt;role&gt;</code> (it prompts for the password).</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Can</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin</code></td>
+<td>everything, plus users, credentials, deleting scans and the audit log</td>
+</tr>
+<tr>
+<td><code>auditor</code></td>
+<td>targets, groups, profiles, PDF imports, collectors and scans; can pick credentials but not see or change them</td>
+</tr>
+<tr>
+<td><code>viewer</code></td>
+<td>read scans, results and reports</td>
+</tr>
+</tbody>
+</table>
+<p>Sign-in sessions last 12 hours. Every change (sign-ins, credentials, targets, scans,
+imports, collectors) is recorded on the <strong>Audit log</strong> page with the user, time and source
+address.</p>
+<h2 id="settings">Settings</h2>
+<p>Settings live in an environment file read by the service:</p>
+<table>
+<thead>
+<tr>
+<th>Install</th>
+<th>File</th>
+<th>Apply with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.rpm</code> / <code>.deb</code></td>
+<td><code>/etc/oscat/oscat.env</code></td>
+<td><code>sudo systemctl restart oscat</code></td>
+</tr>
+<tr>
+<td>Docker <code>.run</code></td>
+<td><code>/opt/oscat-docker/.env</code></td>
+<td><code>docker compose up -d</code> in <code>/opt/oscat-docker</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>C:\ProgramData\OSCAT\oscat.env</code></td>
+<td><code>Restart-Service OSCAT</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Installer default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OSCAT_LISTEN</code></td>
+<td><code>0.0.0.0</code></td>
+<td>address the web server listens on</td>
+</tr>
+<tr>
+<td><code>OSCAT_PORT</code></td>
+<td><code>8443</code></td>
+<td>HTTPS port</td>
+</tr>
+<tr>
+<td><code>OSCAT_TLS_CERT</code>, <code>OSCAT_TLS_KEY</code></td>
+<td>self-signed files in <code>/etc/oscat/tls/</code></td>
+<td>HTTPS certificate and key</td>
+</tr>
+<tr>
+<td><code>OSCAT_MAX_PARALLEL_HOSTS</code></td>
+<td><code>50</code></td>
+<td>hosts scanned at the same time</td>
+</tr>
+<tr>
+<td><code>OSCAT_LOGIN_REFUSAL_LIMIT</code></td>
+<td><code>3</code></td>
+<td>stop starting new logins in a scan after this many hosts in a row refuse the login (<code>0</code> = never stop)</td>
+</tr>
+<tr>
+<td><code>OSCAT_CA_BUNDLE</code></td>
+<td>system store</td>
+<td>CA bundle for WinRM and APIC HTTPS certificates</td>
+</tr>
+<tr>
+<td><code>OSCAT_IMPORT_LLM</code></td>
+<td><code>none</code></td>
+<td>local AI model for PDF import: <code>none</code> or <code>ollama</code></td>
+</tr>
+<tr>
+<td><code>OSCAT_IMPORT_MODEL</code></td>
+<td></td>
+<td>model name, e.g. <code>qwen2.5:7b</code></td>
+</tr>
+<tr>
+<td><code>OSCAT_OLLAMA_URL</code></td>
+<td><code>http://127.0.0.1:11434</code></td>
+<td>where Ollama listens</td>
+</tr>
+<tr>
+<td><code>OSCAT_IMPORT_TIMEOUT_MINUTES</code></td>
+<td><code>30</code></td>
+<td>a PDF import stops if reading the PDF takes longer</td>
+</tr>
+<tr>
+<td><code>OSCAT_IMPORT_MEMORY_MB</code></td>
+<td><code>6144</code></td>
+<td>a PDF import stops if reading the PDF needs more memory (Linux)</td>
+</tr>
+<tr>
+<td><code>OSCAT_MASTER_KEY_FILE</code></td>
+<td><code>/etc/oscat/master.key</code></td>
+<td>key that encrypts stored credentials</td>
+</tr>
+</tbody>
+</table>
+<h3 id="using-your-own-certificate">Using your own certificate</h3>
+<p>Point <code>OSCAT_TLS_CERT</code> and <code>OSCAT_TLS_KEY</code> at a certificate and key from your CA (readable
+by the <code>oscat</code> user) and restart. To make a new self-signed certificate that also covers
+other names: <code>sudo oscat-server gen-cert --force --name oscat.example.com --name 10.0.0.5</code>.</p>
+<h2 id="backup">Backup</h2>
+<p>Back up two things, <strong>separately</strong>:</p>
+<ul>
+<li>the <strong>master key</strong> (<code>/etc/oscat/master.key</code>, or <code>C:\ProgramData\OSCAT\master.key</code>);</li>
+<li>the <strong>data</strong> (<code>/var/lib/oscat</code>, <code>C:\ProgramData\OSCAT</code>, or <code>/opt/oscat-docker</code> for the Docker installer).</li>
+</ul>
+<p>Without the key, stored credentials cannot be decrypted. With the key and the data, they
+can, so never keep both in the same place.</p>
+<h2 id="upgrade">Upgrade</h2>
+<p>Install the newer package, <code>.run</code> file or <code>.exe</code> the same way as the first time. Settings,
+key and data are kept, and the service restarts.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

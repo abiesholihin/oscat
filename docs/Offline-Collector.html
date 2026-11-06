@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offline collector · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="offline-collector">Offline collector</h1>
+<p>Some hosts cannot be reached from the jumphost: a separate network, a client's site, no
+inbound SSH or WinRM. For those, OSCAT issues a <strong>collector</strong>: a script someone runs on the
+host, which writes one results file. OSCAT evaluates that file exactly like a network scan,
+with the same views and reports.</p>
+<p>The script installs nothing and changes nothing on the host.</p>
+<h2 id="one-collector-per-os-and-benchmark">One collector per OS and benchmark</h2>
+<p>A collector is made from one profile, so it is named after the OS release and benchmark
+version it covers:</p>
+<ul>
+<li><code>oscat-collect-ubuntu-22.04-cis-3.0.0.sh</code> (POSIX <code>sh</code>, for Linux and Unix profiles)</li>
+<li><code>oscat-collect-windows-server-2022-cis-3.0.0.ps1</code> (PowerShell, for Windows profiles)</li>
+</ul>
+<p>A database benchmark's collector runs on the database server, Linux or Windows, and runs its
+queries with the database's own client; see <a href="Databases.html#offline-collector">Databases</a>.
+Network devices cannot run a collector; see <a href="Network-Devices.html#devices-oscat-cannot-reach">Network devices</a>
+for auditing them from a saved terminal session.</p>
+<p>The script checks the host's OS first (<code>/etc/os-release</code>, or the Windows edition) and
+refuses any other system, so a SUSE 15 host cannot be audited against the Ubuntu 22.04
+benchmark by mistake. <code>--force</code> (<code>-Force</code> on Windows) overrides that. The results file
+records the host's OS, and OSCAT refuses a file collected on a different OS unless you
+accept it explicitly.</p>
+<p>A profile names its OS as <code>os: {id: ubuntu, version: "22.04"}</code> (the os-release <code>ID</code> and a
+<code>VERSION_ID</code> prefix, or <code>windows-server</code> / <code>windows</code> and the release). Without it, OSCAT
+works it out from the benchmark title.</p>
+<h2 id="issue-a-collector-web-app">Issue a collector (web app)</h2>
+<ol>
+<li>Open the profile on the <strong>Profiles</strong> page and click <strong>Offline collector</strong>.</li>
+<li>Say who it is for (for example <code>ACME 2026 audit</code>) and for how many days the script is
+   valid (90 by default; 0 means no limit).</li>
+<li>Under <strong>Controls</strong>, keep the whole profile, pick a saved control set, or click <strong>Choose
+   controls</strong> (the same picker as a new scan). The checks of left-out controls are not in
+   the script at all, and those controls show as <strong>Excluded</strong> in the results.</li>
+<li>Download the script and hand it over.</li>
+</ol>
+<p>The same page lists the profile's collectors with their controls and uploads. From there you can
+download one again, <strong>extend</strong> its validity (for a rescan after remediation) or <strong>revoke</strong> it.
+After extending, download the script again: copies already handed out keep their old end
+date.</p>
+<h2 id="run-it-on-the-host">Run it on the host</h2>
+<p>As root on Linux or Unix:</p>
+<pre><code class="language-bash">sh oscat-collect-ubuntu-22.04-cis-3.0.0.sh
+# writes oscat-&lt;host&gt;-&lt;os&gt;-&lt;time&gt;.oscat in the current folder
+</code></pre>
+<p>In an elevated PowerShell on Windows:</p>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File oscat-collect-windows-server-2022-cis-3.0.0.ps1
+</code></pre>
+<p>Checks that need root are recorded as errors if it runs as an ordinary user. The script
+can be run on any number of hosts, and again after remediation.</p>
+<p>The script runs only until its end date (shown at the top of the script). After that it
+stops with "This collector stopped working on …" and exit code 5, even with <code>--force</code>; ask
+for the collector to be extended and download it again.</p>
+<h2 id="bring-the-results-back">Bring the results back</h2>
+<p><strong>Scans → Upload collected results</strong>, and select the <code>.oscat</code> files (one per host) from one collector. Each
+file names its collector, which names the profile, so OSCAT knows how to judge it. The
+upload becomes a finished scan. A host named like an existing target is linked to that
+target and takes its groups.</p>
+<h2 id="handing-a-collector-to-a-client">Handing a collector to a client</h2>
+<p>The collector is designed to be given to someone outside your team:</p>
+<ul>
+<li><strong>Readable, but nothing to judge with.</strong> The client's security team can read every
+  command, but the commands are numbered, in random order, and carry no CIS control numbers
+  or titles. What the output should be, and how checks combine into a pass or fail, never
+  leaves OSCAT. The raw output on its own is not an audit report.</li>
+<li><strong>Signed results.</strong> Every results file is signed with the collector's own key, and OSCAT
+  rejects a file that was edited after collection or written by another collector. The key
+  is inside the script, so this stops accidental and casual edits, not a determined
+  administrator; the point above is the real protection.</li>
+<li><strong>A validity window.</strong> The script runs only for the chosen number of days; after that it
+  stops with a message saying so (it checks the host's clock). Results collected while it
+  was valid can be uploaded to OSCAT any time, as many times as needed, for example to
+  rebuild a report. OSCAT refuses a file collected after the end date (the collection time
+  is signed into the file), and every file of a revoked collector.</li>
+</ul>
+<p>OSCAT keeps a record of each collector: its ID, the key (encrypted like credentials), the
+validity, and which control each numbered command belongs to.</p>
+<h2 id="from-the-command-line">From the command line</h2>
+<pre><code class="language-bash">oscat collector -p profiles/cis-ubuntu-22.04/profile.yaml --label &quot;ACME 2026&quot; --days 90
+# writes the script and oscat-collect-ubuntu-22.04-cis-3.0.0.collector.json
+
+oscat import-collected oscat-web1-*.oscat oscat-db1-*.oscat \
+    -p profiles/cis-ubuntu-22.04/profile.yaml \
+    -k oscat-collect-ubuntu-22.04-cis-3.0.0.collector.json -o results.json
+oscat report results.json --xlsx report.xlsx -p profiles/cis-ubuntu-22.04/profile.yaml
+</code></pre>
+<p>The <code>.collector.json</code> file is the collector's record. <strong>Keep it, and never give it to the
+client</strong>: it maps the numbered commands back to controls.</p>
+<h2 id="limits">Limits</h2>
+<ul>
+<li>API checks (such as Cisco APIC) need the network and are reported as errors.</li>
+<li>If the profile changes after collection, checks whose command changed are reported as
+  errors (collect again), while checks whose assertion alone changed are judged again.</li>
+</ul></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

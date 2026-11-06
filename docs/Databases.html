@@ -1,0 +1,199 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Databases · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="databases">Databases</h1>
+<p>CIS database benchmarks mix two kinds of controls: settings you read with a query in the
+database (<code>SHOW ssl</code>, a <code>SELECT</code> on a system view), and checks on the server the database
+runs on (file permissions on the data folder, the service account, log settings in a
+config file). OSCAT audits both in one scan: it logs in to the database to run the queries,
+and to the server's OS to run the rest.</p>
+<p>Supported engines: <strong>PostgreSQL</strong>, <strong>MySQL</strong>, <strong>MariaDB</strong>, <strong>Microsoft SQL Server</strong>,
+<strong>Oracle Database</strong> and <strong>MongoDB</strong>. The drivers for all of them come with OSCAT.</p>
+<h2 id="import-the-benchmark">Import the benchmark</h2>
+<p>Import the engine's CIS PDF on the <strong>Benchmarks</strong> page like any other (see
+<a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a>). OSCAT recognises a database benchmark from
+its title, drafts each audit query as a SQL check, and drafts the pass rule where the
+benchmark states the expected value. Review the drafts as usual: a query whose expected
+result the PDF only describes in words needs its rule written by hand.</p>
+<p>A database benchmark imported with an older OSCAT shows as a Linux benchmark; import its
+PDF again so it is recognised as a database benchmark.</p>
+<h2 id="site-values">Site values</h2>
+<p>Some checks need a name only your site knows, such as your DBA role, an audit file path or
+a list of approved users. The importer writes these as <code>{{name}}</code> in the check, and the
+benchmark page lists them under <strong>Site values</strong>. Fill them in once; every scan and offline
+collector of that benchmark uses them. A check whose site value is empty reports an error
+that names the value, so nothing is judged on a guess.</p>
+<h2 id="scan-a-database">Scan a database</h2>
+<p>Pick the database benchmark on <strong>New scan</strong>. The hosts are the database servers. The
+<strong>Login</strong> card then asks for two logins.</p>
+<h3 id="database">Database</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What to enter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engine</td>
+<td>set by the benchmark</td>
+</tr>
+<tr>
+<td>Port</td>
+<td>the engine's default (5432, 3306, 1433, 1521, 27017), or your own</td>
+</tr>
+<tr>
+<td>Log in to the database with</td>
+<td><strong>A database user and password</strong> (the default), or <strong>The server's OS login</strong></td>
+</tr>
+<tr>
+<td>Database</td>
+<td>the database to connect to; for Oracle, the <strong>service name</strong></td>
+</tr>
+<tr>
+<td>Database credential</td>
+<td>a password credential for a read-only database user (see below)</td>
+</tr>
+<tr>
+<td>Authentication (SQL Server only)</td>
+<td><strong>SQL authentication</strong>, or <strong>Windows authentication</strong> with the jumphost's Kerberos identity</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The server's OS login</strong> suits sites that give auditors no database account: OSCAT logs
+in to the server over SSH or WinRM and runs the queries with the database's own client
+(<code>psql</code>, <code>mysql</code>, <code>sqlplus</code>, <code>sqlcmd</code>, <code>mongosh</code>), the way a DBA would at the console.
+On Linux it runs the client as the account the database already trusts without a password:
+<code>postgres</code> for PostgreSQL, <code>oracle</code> for Oracle (<code>/ as sysdba</code>), otherwise root. Set <strong>Run
+the database client as</strong> to use another account.</p>
+<h3 id="server-the-database-runs-on">Server the database runs on</h3>
+<p>Choose <strong>Linux</strong> (SSH) or <strong>Windows</strong> (WinRM) and fill in that login as for any scan, with
+privilege escalation on Linux. These are the controls that check the server's files,
+services and accounts.</p>
+<p>Choose <strong>No OS login</strong> when you only have database access. The server-side controls are
+then reported as <strong>Manual</strong> with the Observation "not assessed: …" and the reason, so the
+report shows exactly what was left out.</p>
+<h3 id="clusters">Clusters</h3>
+<p>For a cluster (SQL Server Always On, Oracle RAC, a MySQL or PostgreSQL replica set), list
+the <strong>nodes</strong> as the scan's hosts and open <strong>Cluster</strong>. In <strong>Reach the database at</strong>, enter
+the listener, Oracle SCAN name or virtual IP. Each node's OS is audited over its own
+login, and the database settings are read through the shared address.</p>
+<h3 id="controls-checked-in-every-database">Controls checked in every database</h3>
+<p>Some controls apply to each database on the server, or each pluggable database (PDB) in an
+Oracle container database. The importer marks the ones the benchmark says to run in each
+database; OSCAT then runs them in every database it can open, and each row of the result
+starts with the database's name, so the Observation shows which database failed.</p>
+<h2 id="a-read-only-database-account">A read-only database account</h2>
+<p>OSCAT only runs the queries in the benchmark. Give it an account that can read the
+server's settings and system views, and nothing more. Replace the password with your own.</p>
+<p><strong>PostgreSQL</strong></p>
+<pre><code class="language-sql">CREATE ROLE oscat_audit LOGIN PASSWORD 'change-me';
+GRANT pg_monitor TO oscat_audit;
+</code></pre>
+<p><code>pg_monitor</code> reads every setting and statistics view. A few CIS checks read password
+hashes from <code>pg_authid</code>, which only a superuser can read; without one they report an error
+that says so.</p>
+<p><strong>MySQL and MariaDB</strong></p>
+<pre><code class="language-sql">CREATE USER 'oscat_audit'@'JUMPHOST_ADDRESS' IDENTIFIED BY 'change-me';
+GRANT SELECT ON mysql.* TO 'oscat_audit'@'JUMPHOST_ADDRESS';
+GRANT SELECT ON performance_schema.* TO 'oscat_audit'@'JUMPHOST_ADDRESS';
+GRANT PROCESS, SHOW DATABASES ON *.* TO 'oscat_audit'@'JUMPHOST_ADDRESS';
+</code></pre>
+<p><strong>Microsoft SQL Server</strong></p>
+<pre><code class="language-sql">CREATE LOGIN oscat_audit WITH PASSWORD = 'change-me', CHECK_POLICY = ON;
+GRANT VIEW SERVER STATE, VIEW ANY DEFINITION, CONNECT ANY DATABASE TO oscat_audit;
+</code></pre>
+<p><code>CONNECT ANY DATABASE</code> lets the checks that run in every database open each one. With
+Windows authentication, grant the same to the jumphost's AD account instead.</p>
+<p><strong>Oracle Database</strong></p>
+<p>For a container database (12c and later), create a common user that can read every PDB:</p>
+<pre><code class="language-sql">CREATE USER c##oscat_audit IDENTIFIED BY &quot;change-me&quot; CONTAINER = ALL;
+GRANT CREATE SESSION, SET CONTAINER, SELECT_CATALOG_ROLE TO c##oscat_audit CONTAINER = ALL;
+GRANT AUDIT_VIEWER TO c##oscat_audit CONTAINER = ALL;
+ALTER USER c##oscat_audit SET CONTAINER_DATA = ALL CONTAINER = CURRENT;
+</code></pre>
+<p>For a non-container database, create <code>oscat_audit</code> and grant <code>CREATE SESSION</code>,
+<code>SELECT_CATALOG_ROLE</code> and <code>AUDIT_VIEWER</code>.</p>
+<p><strong>MongoDB</strong></p>
+<pre><code class="language-javascript">use admin
+db.createRole({ role: &quot;oscatAudit&quot;, roles: [],
+  privileges: [{ resource: { db: &quot;&quot;, collection: &quot;&quot; }, actions: [&quot;viewUser&quot;, &quot;viewRole&quot;] }] })
+db.createUser({ user: &quot;oscat_audit&quot;, pwd: passwordPrompt(),
+  roles: [&quot;clusterMonitor&quot;, &quot;oscatAudit&quot;] })
+</code></pre>
+<h2 id="offline-collector">Offline collector</h2>
+<p>A database benchmark's offline collector runs on the database server. When you issue it,
+choose <strong>Server the database runs on</strong>: Linux gives a shell script, Windows a PowerShell
+script. Run it as root or an administrator, as for any collector (see
+<a href="Offline-Collector.html">Offline collector</a>).</p>
+<p>It runs the queries with the database's own client on that server:</p>
+<ol>
+<li>It first logs in through the server's OS login: <code>postgres</code> or <code>oracle</code> local login on
+   Linux, Windows authentication for SQL Server.</li>
+<li>If that fails, it asks once for a database user and password. The password is not
+   shown as you type, never written to the results file, and gone when the script ends.</li>
+<li>If the client is not installed, those checks are reported as errors that say so.</li>
+</ol>
+<p>Options for a database other than the local default:</p>
+<pre><code class="language-sh">sh oscat-collect-pgsite.sh --db-host 127.0.0.1 --db-port 5433
+</code></pre>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File oscat-collect-mssql.ps1 -DbHost 'localhost\SALES'
+</code></pre>
+<p>For a SQL Server named instance give the instance in <code>--db-host</code>/<code>-DbHost</code> and leave the
+port out.</p>
+<h2 id="command-line">Command line</h2>
+<pre><code class="language-yaml">hosts:
+  pg1:
+    address: 10.0.0.20
+    connection: database
+    db_engine: postgresql        # postgresql | mysql | mariadb | mssql | oracle | mongodb
+    db_name: appdb               # database, or Oracle service name
+    username: auditor
+    password: {env: OSCAT_DB_PASSWORD}
+  sql1:
+    address: 10.0.0.21
+    connection: database
+    db_engine: mssql
+    db_auth: windows             # SQL login by default; windows = integrated auth
+</code></pre></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

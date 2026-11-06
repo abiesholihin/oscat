@@ -16,7 +16,7 @@ on:
       wiki:
         description: "Also copy the user guide to this repository's wiki"
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: write

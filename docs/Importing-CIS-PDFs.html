@@ -1,0 +1,295 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Importing a CIS benchmark PDF · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="importing-a-cis-benchmark-pdf">Importing a CIS benchmark PDF</h1>
+<p>CIS publishes each benchmark as a PDF. OSCAT turns that PDF into a benchmark you can scan
+with straight away, <strong>without internet access</strong>. Every control is drafted from the PDF and
+marked <strong>needs review</strong> so you know which to check; reviewing them is optional and can be
+done whenever you like.</p>
+<h2 id="what-you-get">What you get</h2>
+<ul>
+<li>OSCAT finds every control in the PDF with its CIS fields: title, profile applicability,
+  description, rationale, impact, audit, remediation, default value and references.</li>
+<li>For each control it drafts the checks from the benchmark's audit instructions.</li>
+<li>Each draft gets a <strong>confidence</strong> and <strong>review notes</strong> that say what was unsure, such as a
+  threshold written in words or a value that depends on your site's policy.</li>
+<li>Commands that the PDF splits over two lines are joined back with their spaces intact.
+  If a drafted command still isn't valid shell, its review note says so, so you can
+  compare it with the PDF before approving it.</li>
+<li>The draft follows how CIS controls usually decide pass or fail:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>The benchmark says</th>
+<th>The draft passes when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"- OR -" between two ways to comply (for example the package is not installed, or its service is disabled and stopped)</td>
+<td>either way holds</td>
+</tr>
+<tr>
+<td>"If nothing is returned, no further audit steps are required"</td>
+<td>the first check passes, or the remaining ones all do</td>
+</tr>
+<tr>
+<td>"4 or less", "7 or more", "no more than 45"</td>
+<td>the number in the output is within the limit, so stricter settings pass too</td>
+</tr>
+<tr>
+<td>"mode 640 or more restrictive", owner and group</td>
+<td>the file mode has no extra permission bits and the owner and group are the ones allowed</td>
+</tr>
+<tr>
+<td>a kernel parameter "is set to 0"</td>
+<td>the running value and the value in the file that systemd uses are both correct</td>
+</tr>
+<tr>
+<td>a value written as <code>&lt;version&gt;</code> or <code>{n}</code></td>
+<td>the line is there with any value in that place</td>
+</tr>
+</tbody>
+</table>
+<p>Each of these adds a review note saying what the draft decided.
+- Optionally, a local AI model on the jumphost improves the less certain drafts.
+- Every imported control starts marked <strong>needs review</strong>, so scan reports flag its results as
+  unreviewed until someone approves the drafted check. The benchmark is still ready to scan
+  the moment it is added.</p>
+<p>On the CIS Ubuntu 22.04 and SUSE 15 benchmarks OSCAT finds every control (306 and 286) and
+drafts about a third of them with high confidence.</p>
+<h3 id="windows-benchmarks">Windows benchmarks</h3>
+<p>CIS Windows benchmarks describe settings as Group Policy paths rather than shell commands, so
+OSCAT drafts them a different way: it reads the registry location, security-policy setting,
+user-right or audit-policy subcategory out of each control and turns it into the matching
+Windows check, with the expected value as the pass rule. These controls need no scripting and
+most draft with high confidence. A few — an account list for a user right, or a setting OSCAT
+cannot map — keep the check so the value is still collected and ask you to set the pass rule
+in review. Windows settings show in the <strong>Checks</strong> tab as a read-only line naming what is
+read (for example <em>Registry  HKLM\...\Name</em>); edit the target in the <strong>YAML</strong> tab if needed.</p>
+<h2 id="in-the-web-app">In the web app</h2>
+<ol>
+<li>On the <strong>Benchmarks</strong> page, click <strong>Add benchmark</strong> and choose the PDF (up to 60 MB and
+   3,000 pages). The server reads it in a separate process, which it stops after 30 minutes,
+   and then deletes the file.</li>
+<li>OSCAT drafts a check for every recommendation and publishes the benchmark as soon as it
+   finishes, so you can scan with it straight away. The Benchmarks page shows how many of its
+   controls still <strong>need review</strong>.</li>
+<li>To review, open the benchmark's <strong>Review</strong> link. Controls are listed <strong>least certain
+   first</strong>, with their confidence, number of checks and review notes, so the top of the list
+   is the handful that most need a look — most controls further down score higher. A low
+   confidence never stops you scanning; it only marks a draft as worth checking. For more
+   accurate drafts, set up the optional <a href="#setting-up-the-local-model">local model</a>.</li>
+<li>Open a control: the benchmark's audit text is on one side, the drafted pass rule on the
+   other (see <a href="#setting-the-pass-rule">Setting the pass rule</a>). Fix it if needed, then:
+   - <strong>Save</strong> keeps your edit and leaves the control for review;
+   - <strong>Approve</strong> marks it reviewed;
+   - <strong>Mark manual</strong> makes it a manual control (approved).</li>
+</ol>
+<p>Each edit updates the published benchmark in place, keeping the same controls, so saved
+   control sets and past scans stay valid. Review as much or as little as you like, whenever
+   you like.</p>
+<h3 id="setting-the-pass-rule">Setting the pass rule</h3>
+<p>The right-hand side has three tabs. The green line under them always says, in words, when
+the control passes.</p>
+<p><strong>Rule type</strong> covers the shapes most CIS controls follow. Pick one, fill in the blanks, and
+click <strong>Use these checks</strong>: OSCAT writes the commands and the rule. When the drafted checks
+already have one of these shapes, the tab opens with it picked and filled in.</p>
+<table>
+<thead>
+<tr>
+<th>Rule type</th>
+<th>You fill in</th>
+<th>Passes when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service not in use</td>
+<td>package, units, package tool</td>
+<td>the package is not installed, or every unit is not enabled and not active</td>
+</tr>
+<tr>
+<td>Kernel module not available</td>
+<td>module</td>
+<td>the module is not on disk, or it is not loaded and is blacklisted with <code>install /bin/false</code></td>
+</tr>
+<tr>
+<td>Mount option set</td>
+<td>mount point, options</td>
+<td>the mount point is not a separate partition, or it has the options</td>
+</tr>
+<tr>
+<td>Separate partition</td>
+<td>mount point</td>
+<td>the mount point is a partition of its own</td>
+</tr>
+<tr>
+<td>Setting within a limit</td>
+<td>command, setting, at most / at least / exactly, value</td>
+<td>the setting's number is within the limit, so stricter values pass</td>
+</tr>
+<tr>
+<td>File permissions</td>
+<td>file, mode, owner, group, what a missing file means</td>
+<td>the mode is that or more restrictive and the owner and group are allowed</td>
+</tr>
+<tr>
+<td>Kernel parameter</td>
+<td>parameter, allowed values</td>
+<td>the running value and the last value systemd sets from its sysctl.d files are allowed</td>
+</tr>
+<tr>
+<td>CIS audit script</td>
+<td>the script</td>
+<td>the script prints <code>** PASS **</code></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Rule type" src="images/8-import-rule-type.png" /></p>
+<p><strong>Checks</strong> shows each check: its command, <strong>Run as root</strong>, and <strong>Passes when the output</strong>:
+is empty, is not empty, contains, does not contain, has a line equal to, has no line equal
+to, is exactly, matches a pattern, has a number at most / at least / exactly, has
+permissions at most, comes with an exit code, or shows <code>** PASS **</code>. Under the checks:</p>
+<ul>
+<li><strong>The control passes when</strong>: all checks pass, any check passes, or <strong>Custom</strong>. Custom
+  builds the rule from checks and groups: click <strong>AND</strong> or <strong>OR</strong> to switch it, <strong>+ group</strong>
+  to add a group, and <strong>×</strong> to take a check out. A check that is not part of the rule is
+  pointed out, because it doesn't count.</li>
+<li><strong>Not applicable when</strong>: pick a check that decides whether the control applies, for
+  example "c1 fails" when c1 looks for the package the control is about.</li>
+</ul>
+<p><img alt="Checks" src="images/9-import-checks.png" /></p>
+<p><strong>YAML</strong> is the same control as text, for anything the other tabs don't cover.</p>
+<h3 id="when-a-control-has-no-checks">When a control has no checks</h3>
+<p>Sometimes OSCAT cannot find the command in the PDF, for example when the benchmark's audit
+is a long script. The control then opens with a <strong>script box</strong> on the Checks tab (in other
+controls, click <strong>+ Add a check (command or CIS script)</strong>):</p>
+<ol>
+<li>Copy the script from the <strong>Audit</strong> box on the left, from <code>#!/usr/bin/env bash</code> to the
+   last line, or a single command, and paste it into the script box. Text copied straight
+   from the PDF works too: OSCAT removes blank lines, page footers, curly quotes and dashes,
+   and joins lines the PDF broke before <code>|</code>, <code>&amp;&amp;</code>, <code>||</code> or <code>2&gt;</code>.</li>
+<li>Leave <strong>The host passes when the output contains</strong> as <code>** PASS **</code>: CIS scripts print
+   that when the host complies. For a single command, type the text its output must
+   contain, or leave it empty to keep the output as evidence for a manual review.</li>
+<li>Keep <strong>Run as root</strong> ticked unless the command works for any user, and click <strong>Add check</strong>.</li>
+<li>Read the new check (OSCAT says how many lines it joined), then <strong>Approve</strong>.</li>
+</ol>
+<p>If a script still cannot be used, <strong>Mark manual</strong> keeps the control as a manual check.</p>
+<h2 id="from-the-command-line">From the command line</h2>
+<pre><code class="language-bash">oscat import-pdf CIS_Ubuntu_Linux_22.04_LTS_Benchmark_v3.0.0.pdf -o profiles/ubuntu-22.04
+</code></pre>
+<p>It prints how many controls it found, how many were drafted with high, medium and low
+confidence, and which to review first. Useful options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--llm ollama --model qwen2.5:14b</code></td>
+<td>let a local model complete uncertain drafts</td>
+</tr>
+<tr>
+<td><code>--ollama-url URL</code></td>
+<td>where Ollama listens (default <code>http://127.0.0.1:11434</code>)</td>
+</tr>
+<tr>
+<td><code>--refine-below 0.8</code></td>
+<td>ask the model about drafts below this confidence</td>
+</tr>
+<tr>
+<td><code>--pages 20-120</code></td>
+<td>only these pages</td>
+</tr>
+<tr>
+<td><code>-c 5.2.1</code></td>
+<td>only this control (repeatable)</td>
+</tr>
+<tr>
+<td><code>--id</code>, <code>--title</code></td>
+<td>the profile's id and title</td>
+</tr>
+</tbody>
+</table>
+<p>Then review the YAML, set <code>review: approved</code> on the controls you checked, and
+<code>oscat validate</code> it.</p>
+<h2 id="setting-up-the-local-model">Setting up the local model</h2>
+<p>The model is <strong>not part of the OSCAT download</strong> — it is optional, and without it the rules
+still draft every control. You install and run it separately. On an air-gapped jumphost:</p>
+<ol>
+<li>On a connected machine: install <a href="https://ollama.com">Ollama</a> and <code>ollama pull qwen2.5:7b</code>.</li>
+<li>Copy the Ollama installer and <code>~/.ollama/models</code> to the jumphost and start Ollama.</li>
+<li>In the <a href="First-Run-and-Administration.html#settings">settings file</a> set
+   <code>OSCAT_IMPORT_LLM=ollama</code> and <code>OSCAT_IMPORT_MODEL=qwen2.5:7b</code>, and restart OSCAT.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Jumphost</th>
+<th>Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12 GB RAM, no GPU</td>
+<td><code>qwen2.5:7b</code> (slow but works)</td>
+</tr>
+<tr>
+<td>16 to 24 GB RAM or a GPU</td>
+<td><code>qwen2.5:14b</code> drafts better</td>
+</tr>
+</tbody>
+</table>
+<h2 id="licensing">Licensing</h2>
+<p>A profile imported from a CIS PDF contains benchmark text, which CIS licenses. Keep these
+profiles, and reports made with them, inside your organisation.</p>
+<h2 id="converting-oscat-v1-scripts">Converting OSCAT v1 scripts</h2>
+<p><code>oscat import-legacy --scripts &lt;folder of control .sh files&gt; --id ... --title ... -o &lt;folder&gt;</code>
+turns OSCAT v1 audit scripts (and optionally its control spreadsheet) into a profile, with
+every control marked for review.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>
