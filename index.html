@@ -192,7 +192,7 @@ footer a:hover{text-decoration:underline}
 }
 .how-cta{margin-top:22px}
 /* gentle reveal for the rest of the page: plays once as each part scrolls into view */
-.hero{overflow:hidden}
+.hero picture{display:block;overflow:hidden}
 .js .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease var(--d,0s),transform .8s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
 .js .rv.on{opacity:1;transform:none}
 .js .chip.rv{transform:translateY(8px);transition-duration:.4s,.5s}
@@ -207,6 +207,34 @@ footer a:hover{text-decoration:underline}
 nav .links a{background:linear-gradient(currentColor,currentColor) left bottom/0 1px no-repeat;padding-bottom:3px;transition:background-size .3s ease,color .2s}
 nav .links a:hover{text-decoration:none;background-size:100% 1px}
 @media (prefers-reduced-motion:reduce){.get.on .b1{animation:none}nav .links a{transition:none}}
+/* download menu: direct links to the latest release files */
+.cta{align-items:center}
+.dl{position:relative;display:inline-block}
+.dl>.btn{cursor:pointer;border:0;font-family:inherit}
+.dl>.btn:after{content:"";display:inline-block;margin-left:10px;border:5px solid transparent;border-top-color:currentColor;vertical-align:-2px}
+.dl-menu{position:absolute;z-index:20;left:50%;top:calc(100% + 10px);transform:translateX(-50%);width:min(420px,calc(100vw - 32px));background:#fff;color:var(--text);border-radius:12px;box-shadow:0 18px 50px rgba(5,47,62,.35);padding:8px;text-align:left;display:none}
+.dl.open .dl-menu{display:block}
+.dl-menu a{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:11px 12px;border-radius:8px;text-decoration:none;color:var(--text)}
+.dl-menu a:hover,.dl-menu a:focus{background:var(--soft);outline:none}
+.dl-menu b{display:block;font-size:15px;color:var(--brand)}
+.dl-menu small{display:block;font-size:13px;color:var(--muted)}
+.dl-menu .sz{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+.dl-menu .foot{border-top:1px solid var(--line);margin-top:6px;padding:9px 12px 4px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.dl-menu .foot a{display:inline;padding:0;color:var(--accent)}
+.step .dl-menu{left:0;transform:none;top:auto;bottom:calc(100% + 10px)}
+/* contact form */
+.contact{background:var(--soft);border-top:1px solid var(--line)}
+.contact form{max-width:640px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.contact label{display:block;font-size:13px;font-weight:600;color:var(--brand);margin-bottom:6px}
+.contact input,.contact textarea{width:100%;font:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text)}
+.contact input:focus,.contact textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.contact .full{grid-column:1/-1}
+.contact textarea{min-height:140px;resize:vertical}
+.contact .send{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.contact .send .btn{background:var(--brand);color:#fff;border:0;cursor:pointer;font-family:inherit}
+.contact .send span{font-size:14px;color:var(--muted)}
+.contact .hp{display:none}
+@media (max-width:600px){.contact form{grid-template-columns:1fr}}
 </style>
 <script>document.documentElement.classList.add('js')</script>
 </head>
@@ -221,6 +249,7 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
         <a href="#how">How it works</a>
         <a href="#features">Features</a>
         <a href="#platforms">Platforms</a>
+        <a href="#contact">Contact</a>
         <a class="keep" href="docs/">Docs</a>
       </div>
     </nav>
@@ -382,6 +411,21 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
     </div>
   </div>
 </section>
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2>Get in touch</h2>
+    <p class="sub">Questions, feedback or a bug to report? Send a message.</p>
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY">
+      <input type="hidden" name="subject" value="New message from the OSCAT website">
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+      <div><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name"></div>
+      <div><label for="c-email">Email</label><input id="c-email" name="email" type="email" required autocomplete="email"></div>
+      <div class="full"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required></textarea></div>
+      <div class="full send"><button class="btn" type="submit">Send message</button><span class="status" role="status"></span></div>
+    </form>
+  </div>
+</section>
 </main>
 
 <footer>
@@ -506,7 +550,7 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
     Array.prototype.forEach.call(hero, function (el) { el.classList.add('on'); });
   }); });
   // sections: a quick wave as they come into view
-  ['#different', '#features', '#platforms', '.get'].forEach(function (sel) {
+  ['#different', '#features', '#platforms', '.get', '#contact'].forEach(function (sel) {
     var sec = document.querySelector(sel);
     if (sec) tag(sec.querySelectorAll('h2, .sub, .get p, .get .cta'), 0.1);
   });
@@ -525,6 +569,76 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
     var y = window.scrollY;
     if (y < 900) shot.style.translate = '0 ' + Math.min(40, y * 0.08).toFixed(1) + 'px';
   }, { passive: true });
+})();
+</script>
+<script>
+// Download menus: direct links to each file of the latest release.
+// The list below is build 229; on load the page asks GitHub for the newest release and updates it.
+(function () {
+  var files = [
+    { m: /setup\.exe$/, t: 'Windows installer', d: 'Windows Server 2016+ or Windows 10+', n: 'oscat-0.1.0-229-setup.exe', s: 52828982 },
+    { m: /\.rpm$/, t: 'RPM package', d: 'RHEL, Rocky, Alma, SUSE', n: 'oscat-0.1.0-229.x86_64.rpm', s: 91276933 },
+    { m: /\.deb$/, t: 'DEB package', d: 'Ubuntu, Debian', n: 'oscat_0.1.0-229_amd64.deb', s: 95157942 },
+    { m: /docker\.run$/, t: 'Docker', d: 'Any Linux with Docker', n: 'oscat-0.1.0-229-docker.run', s: 291021518 },
+    { m: /portable-windows.*\.zip$/, t: 'Portable Windows', d: 'Unzip and run, installs nothing', n: 'oscat-0.1.0-229-portable-windows-x64.zip', s: 72601649 },
+    { m: /portable-linux.*\.tar\.gz$/, t: 'Portable Linux', d: 'Unpack and run, installs nothing', n: 'oscat-0.1.0-229-portable-linux-x86_64.tar.gz', s: 96741946 }
+  ];
+  var rel = { tag: 'oscat_v0.1.0-229', name: 'Build 229' };
+  var base = 'https://github.com/abiesholihin/oscat/releases/download/';
+  var menus = [];
+  function mb(b) { return Math.round(b / 1e6) + ' MB'; }
+  function fill(menu) {
+    var h = '';
+    files.forEach(function (f) {
+      h += '<a role="menuitem" data-file="' + f.t + '" href="' + base + rel.tag + '/' + f.n + '"><span><b>' + f.t + '</b><small>' + f.d + '</small></span><span class="sz">' + mb(f.s) + '</span></a>';
+    });
+    h += '<div class="foot"><span>' + rel.name + '</span><a href="' + base + rel.tag + '/SHA256SUMS">SHA256SUMS</a></div>';
+    menu.innerHTML = h;
+  }
+  document.querySelectorAll('a.btn.b1[href*="releases/latest"]').forEach(function (a) {
+    var wrap = document.createElement('div'); wrap.className = 'dl';
+    var btn = document.createElement('button'); btn.type = 'button';
+    btn.className = a.className; btn.textContent = a.textContent;
+    btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+    var menu = document.createElement('div'); menu.className = 'dl-menu'; menu.setAttribute('role', 'menu');
+    wrap.appendChild(btn); wrap.appendChild(menu);
+    a.parentNode.replaceChild(wrap, a);
+    fill(menu); menus.push(menu);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = !wrap.classList.contains('open');
+      document.querySelectorAll('.dl.open').forEach(function (d) { d.classList.remove('open'); d.firstChild.setAttribute('aria-expanded', 'false'); });
+      if (open) { wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+  document.addEventListener('click', function () { document.querySelectorAll('.dl.open').forEach(function (d) { d.classList.remove('open'); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.querySelectorAll('.dl.open').forEach(function (d) { d.classList.remove('open'); }); });
+  // pick up newer releases without editing the site
+  if (window.fetch) fetch('https://api.github.com/repos/abiesholihin/oscat/releases/latest').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+    if (!j || !j.assets) return;
+    rel.tag = j.tag_name; var m = /build (\d+)/i.exec(j.name || ''); rel.name = m ? 'Build ' + m[1] : j.name || j.tag_name;
+    files.forEach(function (f) { j.assets.forEach(function (x) { if (f.m.test(x.name)) { f.n = x.name; f.s = x.size; } }); });
+    menus.forEach(fill);
+  }).catch(function () {});
+})();
+
+// Contact form: send without leaving the page
+(function () {
+  var form = document.querySelector('.contact form');
+  if (!form || !window.fetch) return;
+  var status = form.querySelector('.status'), btn = form.querySelector('button');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    btn.disabled = true; status.textContent = 'Sending…';
+    fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j.success) { form.reset(); status.textContent = 'Thanks, your message has been sent.'; }
+        else { status.textContent = 'Sorry, the message could not be sent. Please try again later.'; }
+      })
+      .catch(function () { status.textContent = 'Sorry, the message could not be sent. Please try again later.'; })
+      .then(function () { btn.disabled = false; });
+  });
 })();
 </script>
 </body>
