@@ -1,0 +1,120 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network devices · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="network-devices">Network devices</h1>
+<p>Routers, switches and firewalls are audited through their own command line: OSCAT logs in
+over SSH, runs the benchmark's <code>show</code> commands and judges the output. A read-only account
+that can run <code>show</code> (or <code>get</code>, <code>display</code>) commands is enough. Supported: Cisco IOS and
+IOS-XE, IOS XR, NX-OS and ASA, Arista EOS, Juniper Junos, Palo Alto PAN-OS, Fortinet
+FortiOS, HPE Comware, Aruba and Aruba CX, Extreme SLX-OS, and any other device whose checks
+are written as device commands.</p>
+<h2 id="import-the-benchmark">Import the benchmark</h2>
+<p>Import the device's CIS PDF on the <strong>Benchmarks</strong> page (see
+<a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a>). OSCAT recognises a network benchmark from its
+title (Cisco, Juniper, Palo Alto, Fortinet, Check Point, F5 and others) and drafts each
+audit command, such as <code>show running-config | include aaa new-model</code>, as a device command.</p>
+<p>The draft pass rule comes from how the benchmark words the result:</p>
+<table>
+<thead>
+<tr>
+<th>The benchmark says</th>
+<th>The draft passes when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>an output means compliant ("If an output is displayed, the system is compliant")</td>
+<td>the command shows any line</td>
+</tr>
+<tr>
+<td>no output means compliant</td>
+<td>the command shows nothing</td>
+</tr>
+<tr>
+<td>a 'no' in the result means the feature is off</td>
+<td>no line starts with <code>no</code></td>
+</tr>
+<tr>
+<td>a Junos line count of 0, or of at least 1</td>
+<td><code>Count: 0 lines</code>, or a count of 1 or more</td>
+</tr>
+<tr>
+<td>only a sample output, under a filtered <code>show</code></td>
+<td>the command shows any line (flagged for review)</td>
+</tr>
+</tbody>
+</table>
+<p>When the title names one setting to turn on, such as "Enable 'aaa new-model'", and the
+command reads that setting, the rule also requires that setting in the output, so an empty
+output never passes. A title alone ("Set 'service tcp-keepalives-in'") gives a rule at low
+confidence, for review. Where the benchmark needs a count of your own peers or classes, a
+value from your site, or a threshold, the check keeps its output for you to write the rule.
+Controls CIS marks Manual keep the command and its output as evidence only.</p>
+<h2 id="scan-over-the-network">Scan over the network</h2>
+<p>Pick the network benchmark on <strong>New scan</strong>. The login is <strong>Network / firewall device (CLI)</strong>
+with the device type (it picks the command that turns off paging) and, for Cisco and Arista,
+an optional <strong>enable</strong> secret.</p>
+<h2 id="devices-oscat-cannot-reach">Devices OSCAT cannot reach</h2>
+<p>For devices with no SSH path from OSCAT, the device admin runs the commands and sends you
+the log:</p>
+<ol>
+<li>Open the benchmark and click <strong>Device command list</strong>. Choose the whole benchmark or a
+   control set, and download the list. Checks that only filter the configuration
+   (<code>show running-config | include ...</code>) are answered from the full configuration, so the
+   list stays short.</li>
+<li>The admin logs in to the device with terminal logging on (PuTTY session logging,
+   SecureCRT log file, or a recorded privileged session), turns off paging
+   (<code>terminal length 0</code>, <code>set cli screen-length 0</code>, ...), and pastes the list.</li>
+<li>On <strong>Scans → Upload collected results</strong>, choose <strong>Network device sessions</strong>, pick the
+   benchmark, and upload the logs, one file per device.</li>
+</ol>
+<p>OSCAT finds each command by its echo after the device prompt, and judges its output like a
+network scan. The device name comes from its configuration (<code>hostname</code>) or its prompt.</p>
+<p>If all you have is a saved running configuration, upload that instead. Checks it can answer
+are judged; the others (for example ones that read <code>show version</code>) are reported as
+<strong>Manual</strong> with "not assessed" and the command that would answer them.</p>
+<p><strong>Secrets are masked.</strong> Before anything is stored, password hashes, keys, pre-shared keys
+and SNMP communities in the output are replaced with <code>&lt;masked&gt;</code>. The secret's type stays
+(for example <code>enable secret 9 &lt;masked&gt;</code>), since that is what the benchmark checks, and the
+well-known communities <code>public</code> and <code>private</code> stay visible because the benchmark looks for
+them. The uploaded file itself is not kept.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

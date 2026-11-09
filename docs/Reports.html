@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="reports">Reports</h1>
+<p>Every scan can be downloaded as a <strong>PDF report</strong>, an <strong>Excel workbook</strong> and a <strong>CSV</strong> file,
+for the whole scan or for one host. In the web app the buttons are at the top of the scan
+page (whole scan) and in the <strong>Report</strong> column of the host table (one host).</p>
+<h2 id="excel-workbook">Excel workbook</h2>
+<p>Three sheets:</p>
+<table>
+<thead>
+<tr>
+<th>Sheet</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cover</strong></td>
+<td>OSCAT logo, report title, benchmark, profile, scan time, and the totals per result state</td>
+</tr>
+<tr>
+<td><strong>Dashboard</strong></td>
+<td>totals (hosts, controls checked, compliance score, failed, errors), a table of hosts with hostname, IP address, groups, state and counts per result, and charts: overall results, results by host, compliance by section, most failed controls</td>
+</tr>
+<tr>
+<td><strong>Details</strong></td>
+<td>one row per control (per host and control for a multi-host scan), in benchmark order</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Excel dashboard" src="images/report-excel-dashboard.png" /></p>
+<p>Controls left out of a scan (see <a href="Profiles.html#control-sets">control sets</a>) are still listed,
+with the status <strong>Excluded</strong> and the note "Excluded from this audit". They are not counted in
+the totals, scores or charts.</p>
+<p>The <strong>Details</strong> columns are: (Hostname, IP address when several hosts,) <strong>No</strong>, <strong>Policy</strong>,
+<strong>Profile Applicability</strong>, <strong>Status</strong>, <strong>Observation</strong>, then the rest of the CIS fields in
+the order the benchmark prints them: Description, Rationale, Impact, Audit, Remediation,
+Default Value, References. The scan report's Observation holds the audit output; the
+per-host report gives a short observation per control.</p>
+<h3 id="changing-a-result-in-the-workbook">Changing a result in the workbook</h3>
+<p>A client may accept a setting that differs from CIS, for example a stricter or looser
+password rule set by their own policy. To record that, pick a new value in the control's
+<strong>Status</strong> cell on the Details sheet. The cell is a dropdown of the results (including Excluded), and its
+colour changes with the value. The totals on the Cover and Dashboard, the host table, the
+compliance scores and the charts are formulas over the Status column, so they follow the
+change. The Observation keeps the actual value OSCAT found on the host, so a reader can see
+what was accepted; add a note there if you want to record why.</p>
+<h2 id="pdf-report">PDF report</h2>
+<ul>
+<li>A cover page with the logo, title, benchmark and scan facts and the totals.</li>
+<li><strong>Hosts</strong>: each host's score and counts (scan report).</li>
+<li><strong>Controls</strong>: each control with how many hosts passed, failed or errored and which hosts
+  failed (scan report), or each control's status and a short observation (per-host report).</li>
+<li><strong>Observation</strong>: every control with its benchmark text (description, rationale, audit,
+  remediation and the rest), then the result on each host and what its audit commands
+  returned. Long output is shortened; the full evidence stays in OSCAT.</li>
+<li>Following pages carry a small logo, the report title and the page number in the footer.</li>
+</ul>
+<p><img alt="PDF cover" src="images/report-pdf-cover.png" /></p>
+<p>Status colours are the same everywhere: Pass green, Fail red, Error dark red, Manual teal,
+N/A blue, Skipped grey.</p>
+<h2 id="csv">CSV</h2>
+<p>One row per host and control: host, address, groups, host state, control, title, status,
+the reason, and whether the control still needs review. Unreachable hosts get one row with
+the error. Useful for loading results into another tool.</p>
+<p>Text that a spreadsheet would read as a formula (starting with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code>) gets a
+leading apostrophe, so opening the file in Excel never runs anything from a host's output.</p>
+<h2 id="from-the-command-line">From the command line</h2>
+<pre><code class="language-bash">oscat report results.json --failures                        # list failed and errored controls
+oscat report results.json --xlsx audit.xlsx --pdf audit.pdf --title &quot;Q4 web servers&quot; \
+    -p profiles/cis-ubuntu-22.04/profile.yaml               # -p adds levels and benchmark text
+oscat report results.json --host web1 --xlsx web1.xlsx --pdf web1.pdf   # one host
+oscat report results.json --csv results.csv
+</code></pre>
+<p>Reports made from a profile imported from a CIS PDF contain benchmark text, which CIS
+licenses: keep them inside your organisation and the client's.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

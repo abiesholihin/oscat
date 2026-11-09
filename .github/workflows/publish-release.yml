@@ -1,0 +1,91 @@
+# Copies an OSCAT release (installers, SHA256SUMS and notes) from the private oscat-dev
+# repository to this public repository's Releases page, and copies the user guide
+# (docs/wiki) to this repository's wiki.
+#
+# Needs one secret, OSCAT_DEV_TOKEN: a fine-grained token with read-only access to
+# "Contents" of abiesholihin/oscat-dev.
+name: Publish release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag in oscat-dev, e.g. v0.1.0-229 (empty = latest)"
+        required: false
+        default: ""
+      wiki:
+        description: "Also copy the user guide to this repository's wiki"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+env:
+  SOURCE: abiesholihin/oscat-dev
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the release from oscat-dev
+        env:
+          GH_TOKEN: ${{ secrets.OSCAT_DEV_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release view --repo "$SOURCE" --json tagName -q .tagName)
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          gh release view "$TAG" --repo "$SOURCE" --json name -q .name > title.txt
+          gh release view "$TAG" --repo "$SOURCE" --json body -q .body > notes.md
+          # point the notes at this public repository instead of the private one
+          sed -i -E -e "s#github.com/abiesholihin/oscat-(dev|v2)/(releases|wiki)#github.com/$GITHUB_REPOSITORY/\\2#g" \
+                 -e "s#Full instructions are in the README\.#Full instructions are in the [documentation](https://github.com/$GITHUB_REPOSITORY/wiki).#" notes.md
+          mkdir files
+          gh release download "$TAG" --repo "$SOURCE" --dir files
+          ls -la files
+
+      - name: Publish it here
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --title "$(cat title.txt)" --notes-file notes.md
+            gh release upload "$TAG" files/* --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$TAG" files/* --repo "$GITHUB_REPOSITORY" \
+              --target "${{ github.ref_name }}" --title "$(cat title.txt)" \
+              --notes-file notes.md --latest
+          fi
+
+  wiki:
+    if: ${{ inputs.wiki }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the user guide from oscat-dev
+        uses: actions/checkout@v4
+        with:
+          repository: abiesholihin/oscat-dev
+          token: ${{ secrets.OSCAT_DEV_TOKEN }}
+          sparse-checkout: docs/wiki
+          path: source
+      - name: Copy it to this repository's wiki
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          git clone "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" wiki
+          find wiki -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r source/docs/wiki/. wiki/
+          rm -f wiki/README.md
+          rm -f wiki/*.sh
+          # releases and wiki links point here; links into the source code stay as they are
+          find wiki -name '*.md' -exec sed -i -E \
+            "s#github.com/abiesholihin/oscat-(dev|v2)/(releases|wiki)#github.com/${GITHUB_REPOSITORY}/\\2#g" {} +
+          cd wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "wiki already up to date"; exit 0; }
+          git commit -m "Update the user guide from oscat-dev"
+          git push

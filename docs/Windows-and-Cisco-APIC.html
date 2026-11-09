@@ -1,0 +1,244 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windows, Cisco APIC and network devices · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="windows-cisco-apic-and-network-devices">Windows, Cisco APIC and network devices</h1>
+<p>Most CIS Windows settings are described as Group Policy paths in the GUI, Cisco APIC is
+managed from a web console, and routers, switches and firewalls have their own command
+line. OSCAT audits all of them without a GUI: it reads the place where each setting is
+actually stored.</p>
+<h2 id="windows">Windows</h2>
+<h3 id="connecting">Connecting</h3>
+<p>Windows hosts are audited over <strong>WinRM</strong> (PowerShell Remoting). Use an account in the
+host's local <strong>Administrators</strong> group; there is no privilege escalation on Windows.</p>
+<p>A new scan with a Windows benchmark logs in over WinRM:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Choices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td><strong>HTTPS</strong> (recommended) or <strong>HTTP (encrypted messages)</strong>: Negotiate/Kerberos still encrypts each message. Set the port in the <strong>Port</strong> box (5986 and 5985 by default).</td>
+</tr>
+<tr>
+<td>Certificate check</td>
+<td><strong>Trust on first use</strong> (the default: pins the certificate a host shows the first time and stops if it changes later, so self-signed WinRM certificates work), <strong>Verify</strong> against <code>OSCAT_CA_BUNDLE</code> or the system store, or <strong>Ignore</strong> (not recommended)</td>
+</tr>
+<tr>
+<td>Advanced → Windows authentication</td>
+<td><strong>Negotiate</strong> (the default: Kerberos, then NTLM), <strong>Kerberos</strong>, <strong>NTLM</strong>, <strong>CredSSP</strong>, <strong>Basic</strong> (local accounts, HTTPS only)</td>
+</tr>
+</tbody>
+</table>
+<p>For domain accounts write the user as <code>CORP\auditor</code> or <code>auditor@corp.example.com</code>. Set
+<code>OSCAT_CA_BUNDLE</code> in the <a href="First-Run-and-Administration.html#settings">settings</a> to the CA
+that signed the hosts' WinRM certificates.</p>
+<p>To enable WinRM over HTTPS on a host, an administrator typically runs
+<code>winrm quickconfig -transport:https</code> with a server certificate in place, or deploys it by
+Group Policy.</p>
+<h3 id="windows-checks">Windows checks</h3>
+<p>Profiles read Windows settings with these check types; the value read is kept as evidence.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Reads</th>
+<th>Prints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>registry: {key, value}</code></td>
+<td>a registry value</td>
+<td>the value (one line per item of a multi-string), nothing if absent</td>
+</tr>
+<tr>
+<td><code>secpol: {setting}</code></td>
+<td><code>secedit /export</code> (password, lockout and other security policy)</td>
+<td>the setting's value</td>
+</tr>
+<tr>
+<td><code>user_right: {right, format: sid}</code></td>
+<td>user rights assignment</td>
+<td>one account per line, sorted</td>
+</tr>
+<tr>
+<td><code>auditpol: {subcategory}</code></td>
+<td><code>auditpol /get /subcategory</code> (name or GUID)</td>
+<td>e.g. <code>Success and Failure</code></td>
+</tr>
+<tr>
+<td><code>service: {name, property}</code></td>
+<td><code>Get-Service</code></td>
+<td>the start type or status, <code>NotInstalled</code> if absent</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">checks:
+  - id: length
+    secpol: {setting: MinimumPasswordLength}
+    privilege: root
+    assert: {num: {op: gte, value: 14}}
+  - id: smb1
+    registry: {key: 'HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters', value: SMB1}
+    assert: {equals: &quot;0&quot;}
+  - id: tcb
+    user_right: {right: SeTcbPrivilege, format: sid}
+    assert: {empty: true}
+  - id: spooler
+    service: {name: Spooler, property: start_type}
+    assert: {in_set: [Disabled, NotInstalled]}
+</code></pre>
+<p>A <code>run:</code> check with <code>shell: powershell</code> runs any other PowerShell command. See
+<code>profiles/cis-windows-server-2022</code>
+for a sample.</p>
+<p>Hosts without WinRM can be audited with the <a href="Offline-Collector.html">offline collector</a>
+(PowerShell).</p>
+<h2 id="cisco-apic">Cisco APIC</h2>
+<h3 id="connecting_1">Connecting</h3>
+<p>An APIC (the Cisco ACI fabric controller) is audited through its management interface,
+reading the same settings its web console shows. OSCAT only reads, never changes anything,
+and signs out at the end, so a <strong>read-only</strong> APIC user is enough.</p>
+<p>When adding the target, choose <strong>Cisco APIC (REST API)</strong>, with HTTPS on port 443. For a
+login domain such as TACACS, write the user as <code>apic#TACACS\auditor</code>. Certificate checking
+works as for WinRM.</p>
+<h3 id="apic-checks">APIC checks</h3>
+<p>A <code>rest</code> check names the APIC object to read and the setting to pick out of it:</p>
+<pre><code class="language-yaml">checks:
+  - id: http
+    rest:
+      path: /api/mo/uni/fabric/comm-default/http.json    # or /api/class/&lt;class&gt;.json
+      query: {rsp-subtree: &quot;no&quot;}                          # optional
+      select: imdata[*].commHttp.attributes.adminSt       # keys, * and [*] / [n]
+    assert: {equals: disabled}
+</code></pre>
+<p>CIS has no APIC benchmark, so the bundled
+<code>profiles/cisco-apic-baseline</code>
+is OSCAT's own baseline, marked for review.</p>
+<h2 id="network-and-firewall-devices">Network and firewall devices</h2>
+<p>Routers, switches and firewalls don't give a shell: an SSH login lands in the vendor's own
+command line. OSCAT audits them over that CLI, reading <code>show</code> (or <code>get</code>) output. It only
+reads, never changes anything, so a <strong>read-only</strong> account is enough.</p>
+<h3 id="connecting_2">Connecting</h3>
+<p>A new scan with a network benchmark logs in over the device CLI (or the APIC REST API):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Choices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login credential</td>
+<td>an SSH password or key for a read-only account on the device</td>
+</tr>
+<tr>
+<td>Device type</td>
+<td>picks the command that turns off output paging — Cisco IOS/IOS-XE, IOS XR, NX-OS, ASA, Arista EOS, Juniper Junos, Palo Alto PAN-OS, Fortinet FortiOS, HPE Comware, HPE Aruba, HPE Aruba CX, Extreme SLX-OS, or Generic</td>
+</tr>
+<tr>
+<td>Host key check</td>
+<td>as for SSH (trust on first use, strict, or ignore)</td>
+</tr>
+<tr>
+<td>Advanced → Connect through (SSH bastion)</td>
+<td>a saved Linux host to go through, if the device is only reachable from there</td>
+</tr>
+<tr>
+<td>Enable mode</td>
+<td>tick to enter privileged mode after login (Cisco/Arista <code>enable</code>)</td>
+</tr>
+<tr>
+<td>Enable secret</td>
+<td>a password credential for the enable secret, or leave it as the login password when the account already has enable rights</td>
+</tr>
+</tbody>
+</table>
+<p>Devices that log straight into the mode their audits read from (Juniper, Palo Alto,
+Fortinet) don't need enable mode.</p>
+<h3 id="network-checks">Network checks</h3>
+<p>A CLI check sends a device command and judges its text output, so a benchmark for any such
+appliance works once its checks are written as <code>run:</code> with <code>shell: cli</code>:</p>
+<pre><code class="language-yaml">profile:
+  platform: network
+controls:
+  - id: ssh-timeout
+    title: Idle SSH sessions time out
+    checks:
+      - id: timeout
+        run: show running-config | include line vty|exec-timeout
+        shell: cli
+        assert: {contains: &quot;exec-timeout 10 0&quot;}
+</code></pre>
+<p>CIS has no bundled network profile (the benchmarks are licensed), so import the device's
+CIS PDF like any other (see <a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a>) and write each
+check as a <code>show</code> command.</p>
+<h2 id="inventory-examples-command-line">Inventory examples (command line)</h2>
+<pre><code class="language-yaml">hosts:
+  win1:
+    address: 10.0.0.31
+    connection: winrm
+    username: CORP\auditor
+    password: {env: OSCAT_WIN_PASSWORD}
+    scheme: https                 # https (5986, default) | http (5985)
+    winrm_auth: negotiate         # negotiate | kerberos | ntlm | credssp | basic
+    cert_validation: /etc/oscat/ca.pem   # true | false | CA bundle path
+  apic1:
+    address: apic1.example.net
+    connection: apic
+    username: apic#TACACS\auditor
+    password: {env: OSCAT_APIC_PASSWORD}
+    cert_validation: /etc/oscat/ca.pem
+  switch1:
+    address: 10.0.0.9
+    connection: cli
+    username: auditor
+    password: {env: OSCAT_NET_PASSWORD}
+    platform: cisco-ios           # see the device-type list above; generic by default
+    enable: true                  # enter privileged mode after login
+    enable_password: {env: OSCAT_ENABLE_SECRET}   # omit to reuse the login password
+</code></pre></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

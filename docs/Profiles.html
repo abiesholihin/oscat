@@ -1,0 +1,243 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarks · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="benchmarks">Benchmarks</h1>
+<p>A <strong>benchmark</strong> is one standard in OSCAT's format: its controls, the checks each control
+runs, how the check results combine, and which controls depend on others. Benchmarks are
+YAML files (a <code>profile.yaml</code>), so they can be read, reviewed and kept in version control.</p>
+<h2 id="getting-a-benchmark">Getting a benchmark</h2>
+<p>OSCAT ships with <strong>no benchmarks</strong>: you decide what to audit against and add it yourself.
+On the <strong>Benchmarks</strong> page, <strong>Add benchmark</strong> takes a CIS benchmark PDF — OSCAT drafts a
+benchmark from it on the jumphost and publishes it so you can scan straight away, then you
+review the drafted checks whenever you like (<a href="Importing-CIS-PDFs.html">Import a CIS PDF</a>).</p>
+<h2 id="managing-benchmarks-in-the-web-app">Managing benchmarks in the web app</h2>
+<p>The <strong>Benchmarks</strong> page lists each benchmark with its version, platform, number of controls
+and how many still <strong>need review</strong> (with a <strong>Review</strong> link to work through them). A benchmark
+still being read, or one that failed, shows there too until it finishes.</p>
+<p>A benchmark's page lists its controls with levels, checks, dependencies and review state, and
+has the <strong>Offline collector</strong> button (<a href="Offline-Collector.html">Offline collector</a>) and
+<strong>Download Excel</strong>: every control with its benchmark text in the report layout, with Status
+and Observation left empty to fill in by hand. Pick <strong>All controls</strong> or one of your control
+sets; a set's sheet holds only its controls and keeps their benchmark numbers.</p>
+<h3 id="control-sets">Control sets</h3>
+<p>A <strong>control set</strong> is a named choice of a profile's controls, for example "ACME L1 servers",
+to reuse for scans and offline collectors. On the profile's page, <strong>+ New control set</strong>
+opens the control picker: tick controls by section, search by number or title, or use the
+quick picks. Controls a ticked control depends on are added for you. The list shows how
+many controls each set runs and which scans and collectors use it; auditors can <strong>edit</strong>
+or <strong>delete</strong> a set. Scans and collectors already made from a set keep the controls they
+had.</p>
+<h4 id="your-own-controls">Your own controls</h4>
+<p>Below the picker, <strong>+ Add a control of your own</strong> lets you type in a control: a title, the
+command to run, and what output makes it pass (is exactly, contains, does not contain,
+matches a pattern, is empty or not empty, or the command succeeds). Add more than one check
+and all of them must pass. <strong>+ Copy controls from another benchmark</strong> copies controls, with
+their checks, from another benchmark for the same platform.</p>
+<p>Added controls join the benchmark under <strong>Custom controls</strong>, numbered C.1, C.2 and so on,
+and are ticked in the set you are editing. They are scanned, collected offline, reported and
+scored like any other control.</p>
+<p>A set belongs to the benchmark, not to one upload, so it still works after you upload a
+newer version of the same profile. Controls the new version no longer has are ignored.</p>
+<p>On the server: <code>oscat-server import-profile &lt;folder, .yaml or .zip&gt;</code>. To check a file for
+mistakes before uploading: <code>oscat validate profile.yaml</code>.</p>
+<h2 id="the-format">The format</h2>
+<pre><code class="language-yaml">profile:
+  id: cis-ubuntu-22.04
+  title: CIS Ubuntu Linux 22.04 LTS Benchmark
+  benchmark: CIS Ubuntu Linux 22.04 LTS Benchmark
+  version: 3.0.0
+  platform: linux                      # linux | unix | windows | network | database | other
+  os: {id: ubuntu, version: &quot;22.04&quot;}   # used by the offline collector
+  sections: {&quot;1&quot;: Initial Setup, &quot;5&quot;: Access Control}
+
+controls:
+  - id: &quot;1.1.1.1&quot;
+    title: Ensure cramfs kernel module is not available
+    levels: [L1-server, L1-workstation]
+    description: ...                   # CIS fields shown in reports:
+    rationale: ...                     # impact, audit, remediation, default_value, references
+    checks:
+      - id: not_loaded
+        run: lsmod | grep -w cramfs || true
+        assert: {empty: true}
+      - id: not_loadable
+        run: modprobe --showconfig | grep -E '^\s*install\s+cramfs\b' || true
+        assert: {any_line: {regex: '^\s*install\s+cramfs\s+/bin/(true|false)'}}
+    logic: {and: [not_loaded, not_loadable]}
+</code></pre>
+<h3 id="checks">Checks</h3>
+<p>Each check collects one piece of evidence and judges it with an assertion.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>name used in <code>logic</code> and shown in the evidence</td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td>a command (or a multi-line script)</td>
+</tr>
+<tr>
+<td><code>run_script</code></td>
+<td>a script file next to the profile, instead of <code>run</code></td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td><code>sh</code> (default), <code>bash</code>, <code>powershell</code></td>
+</tr>
+<tr>
+<td><code>privilege</code></td>
+<td><code>user</code> (default) or <code>root</code>: run through privilege escalation</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>seconds, default 60</td>
+</tr>
+<tr>
+<td><code>assert</code></td>
+<td>the assertion (below); without one the check is evidence for a manual review</td>
+</tr>
+</tbody>
+</table>
+<p>Windows checks (<code>registry</code>, <code>secpol</code>, <code>user_right</code>, <code>auditpol</code>, <code>service</code>) and APIC checks
+(<code>rest</code>) read settings directly instead of running a command; see
+<a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a>.</p>
+<h3 id="assertions">Assertions</h3>
+<table>
+<thead>
+<tr>
+<th>Assertion</th>
+<th>Passes when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>empty: true</code> / <code>not_empty: true</code></td>
+<td>the output is empty / not empty</td>
+</tr>
+<tr>
+<td><code>equals</code>, <code>not_equals</code></td>
+<td>the trimmed output is exactly / is not the value</td>
+</tr>
+<tr>
+<td><code>contains</code>, <code>not_contains</code></td>
+<td>the output contains / does not contain the text</td>
+</tr>
+<tr>
+<td><code>regex</code>, <code>not_regex</code></td>
+<td>the regular expression matches / does not match</td>
+</tr>
+<tr>
+<td><code>in_set: [a, b]</code></td>
+<td>the output is one of the values</td>
+</tr>
+<tr>
+<td><code>exit_code: 0</code> (or a list)</td>
+<td>the command's exit code is one of them</td>
+</tr>
+<tr>
+<td><code>num: {op: lte, value: 365, pattern: 'PASS_MAX_DAYS\s+(\d+)'}</code></td>
+<td>the number found compares (<code>eq</code>, <code>ne</code>, <code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code>)</td>
+</tr>
+<tr>
+<td><code>mode_at_most: "0640"</code></td>
+<td>the octal mode in the output grants no more than this</td>
+</tr>
+<tr>
+<td><code>contains_lines: [...]</code></td>
+<td>every listed line appears in the output</td>
+</tr>
+<tr>
+<td><code>exact_lines: [...]</code></td>
+<td>the output has exactly these lines</td>
+</tr>
+<tr>
+<td><code>every_line</code>, <code>any_line</code>, <code>no_line: {&lt;assertion&gt;}</code></td>
+<td>every / some / no output line passes the inner assertion</td>
+</tr>
+<tr>
+<td><code>all_of</code>, <code>any_of: [...]</code>, <code>not: {...}</code></td>
+<td>combine assertions</td>
+</tr>
+</tbody>
+</table>
+<p>Options <code>ignore_case: true</code> and <code>normalize_whitespace: true</code> can sit beside an assertion.</p>
+<h3 id="logic-controls-with-several-results">Logic: controls with several results</h3>
+<p><code>logic</code> combines the results of a control's checks. Without it, every check must pass.</p>
+<pre><code class="language-yaml">logic: {and: [a, b]}                     # both pass
+logic: {or: [a, b]}                      # either passes
+logic: {not: a}
+logic: {at_least: {count: 2, of: [a, b, c]}}
+logic: {if: installed, then: disabled}   # only required when 'installed' passes
+logic: {if: a, then: b, else: c}
+</code></pre>
+<p>A definite answer wins over an unknown one: an <code>and</code> with any failing check fails even if
+another check errored, and an <code>or</code> with any passing check passes.</p>
+<h3 id="applicability-and-dependencies">Applicability and dependencies</h3>
+<pre><code class="language-yaml">  - id: &quot;5.1.20&quot;
+    applicable_if: sshd_present          # N/A when this check (or logic) fails
+    checks: [...]
+
+  - id: &quot;1.1.2.2&quot;
+    title: Ensure nodev option set on /tmp partition
+    depends_on:
+      - {control: &quot;1.1.2.1&quot;, require: PASS, otherwise: NOT_APPLICABLE}
+</code></pre>
+<p><code>depends_on</code> runs the control only when the named control reached one of the <code>require</code>
+states (default <code>PASS</code>); otherwise the control gets the <code>otherwise</code> state (default
+<code>SKIPPED</code>).</p>
+<h3 id="manual-controls-and-review">Manual controls and review</h3>
+<ul>
+<li><code>manual: true</code> marks a control a person must judge; any checks still run as evidence.</li>
+<li><code>review: needed</code> marks a control nobody has checked yet (imported or converted
+  controls). Results and reports flag them until the control is set to <code>review: approved</code>.</li>
+</ul>
+<p>See <code>profiles/examples/linux-demo.yaml</code>
+for a complete example of every feature.</p>
+<p>Custom controls are listed under their own "Your custom controls" heading on the benchmark page and are <strong>not</strong> part of a scan or an offline collector unless you tick <strong>Include custom controls</strong> when you start it (or pick a control set that contains them). Click any control to see its checks and the rule it must pass.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

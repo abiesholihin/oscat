@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Command line · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="command-line">Command line</h1>
+<p>OSCAT has two commands. Both are installed by every installer (on Windows they are added to
+the PATH). <code>--help</code> after any command lists all its options.</p>
+<h2 id="oscat-the-scanner"><code>oscat</code>: the scanner</h2>
+<p>Works on its own, without the web server, from YAML profiles and inventories.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oscat validate PROFILE</code></td>
+<td>checks a profile for mistakes</td>
+</tr>
+<tr>
+<td><code>oscat scan -p PROFILE -i INVENTORY [-g GROUP] [-H HOST] [-c CONTROL] [-o results.json] [--csv FILE]</code></td>
+<td>scans hosts; <code>-g</code>, <code>-H</code>, <code>-c</code> repeat; <code>--parallel-hosts</code> (50) and <code>--parallel-checks</code> (4 per host)</td>
+</tr>
+<tr>
+<td><code>oscat evaluate RESULTS -p PROFILE -o OUT</code></td>
+<td>re-judges saved evidence with a changed profile, without touching the hosts</td>
+</tr>
+<tr>
+<td><code>oscat report RESULTS [--failures] [--csv F] [--xlsx F] [--pdf F] [--title T] [--host H] [-p PROFILE]</code></td>
+<td>prints a summary and writes reports; <code>--host</code> makes a one-host report</td>
+</tr>
+<tr>
+<td><code>oscat collector -p PROFILE [-o PATH] [--label L] [--days 90]</code></td>
+<td>writes an <a href="Offline-Collector.html">offline collector</a> and its <code>.collector.json</code> record</td>
+</tr>
+<tr>
+<td><code>oscat import-collected FILES... -p PROFILE -k RECORD [-g GROUP] [-o results.json] [--force]</code></td>
+<td>evaluates collector results files</td>
+</tr>
+<tr>
+<td><code>oscat import-pdf PDF -o FOLDER [--llm ollama --model M] [--pages A-B] [-c CONTROL]</code></td>
+<td><a href="Importing-CIS-PDFs.html">drafts a profile from a CIS PDF</a></td>
+</tr>
+<tr>
+<td><code>oscat import-legacy --scripts DIR --id ID --title T -o FOLDER [--excel F]</code></td>
+<td>converts OSCAT v1 scripts to a profile</td>
+</tr>
+</tbody>
+</table>
+<p>Secrets in an inventory are references, never plain text: <code>{env: VAR}</code>, <code>{prompt: label}</code>
+or <code>{file: path}</code>. See <a href="Credentials-and-Targets.html#inventory-files-command-line">Credentials and targets</a>.</p>
+<p>Example:</p>
+<pre><code class="language-bash">export OSCAT_SSH_PASSWORD=...
+oscat validate profiles/cis-ubuntu-22.04/profile.yaml
+oscat scan -p profiles/cis-ubuntu-22.04/profile.yaml -i inventory.yaml -g web -o results.json
+oscat report results.json --failures
+oscat report results.json --xlsx audit.xlsx --pdf audit.pdf -p profiles/cis-ubuntu-22.04/profile.yaml
+</code></pre>
+<h2 id="oscat-server-administering-the-web-app"><code>oscat-server</code>: administering the web app</h2>
+<p>Run as root (Linux) or in an administrator prompt (Windows) so it can read the settings
+file and the master key.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oscat-server create-user NAME [--role admin\|auditor\|viewer]</code></td>
+<td>adds a user; prompts for the password</td>
+</tr>
+<tr>
+<td><code>oscat-server import-profile PATH</code></td>
+<td>adds a profile folder, YAML or zip</td>
+</tr>
+<tr>
+<td><code>oscat-server gen-cert [--name N]... [--force]</code></td>
+<td>creates a self-signed certificate</td>
+</tr>
+</tbody>
+</table>
+<p>For a Docker install, run them inside the container:
+<code>cd /opt/oscat-docker &amp;&amp; docker compose exec api oscat-server create-user alice --role auditor</code>.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>

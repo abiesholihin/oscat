@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSCAT v2 · OSCAT user guide</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><style>:root{--brand:#074054;--ink:#d9f3fc;--accent:#0e7490;--text:#102a33;--muted:#5d7480;--line:#d5e3e9;--soft:#f3f8fa}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Inter,system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+header{background:var(--brand);color:var(--ink)}header .in{max-width:1180px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+header img{height:36px;display:block}header a{color:var(--ink);text-decoration:none;font-size:15px;margin-left:22px}
+.layout{max-width:1180px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px}
+aside{font-size:14px;position:sticky;top:16px;align-self:start}aside ul{list-style:none;padding:0;margin:4px 0 14px}aside li{margin:4px 0}
+aside a{color:var(--accent);text-decoration:none}aside a:hover{text-decoration:underline}aside p{margin:10px 0 2px}
+article h1,article h2,article h3{color:var(--brand);line-height:1.25}article h1{font-size:30px;margin-top:0}article h2{margin-top:36px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+article a{color:var(--accent)}article img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px;font-size:.92em}pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;margin:14px 0}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:14px 0;padding:8px 16px;border-left:4px solid var(--accent);background:var(--soft)}
+footer{background:#052f3e;color:var(--ink);font-size:13px;padding:22px 20px;text-align:center}
+@media (max-width:760px){.layout{grid-template-columns:1fr;gap:16px;padding:20px 16px}aside{position:static;border-bottom:1px solid var(--line);padding-bottom:8px}header .nav a:not(.keep){display:none}}</style></head><body>
+<header><div class="in"><a href="../" style="margin:0"><img src="../assets/logo.svg" alt="OSCAT"></a><span class="nav"><a href="../">Home</a><a href="index.html">User guide</a><a class="keep" href="https://github.com/abiesholihin/oscat/releases/latest">Download</a></span></div></header>
+<div class="layout"><aside><p><strong><a href="index.html">User guide</a></strong></p>
+<p><strong>Getting started</strong></p>
+<ul>
+<li><a href="Installation.html">Installation</a></li>
+<li><a href="First-Run-and-Administration.html">First run and administration</a></li>
+</ul>
+<p><strong>Using OSCAT</strong></p>
+<ul>
+<li><a href="Credentials-and-Targets.html">Credentials and targets</a></li>
+<li><a href="Running-Scans.html">Running scans</a></li>
+<li><a href="Reports.html">Reports</a></li>
+</ul>
+<p><strong>Profiles</strong></p>
+<ul>
+<li><a href="Profiles.html">Profiles and the format</a></li>
+<li><a href="Importing-CIS-PDFs.html">Importing a CIS PDF</a></li>
+</ul>
+<p><strong>More</strong></p>
+<ul>
+<li><a href="Offline-Collector.html">Offline collector</a></li>
+<li><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></li>
+<li><a href="Databases.html">Databases</a></li>
+<li><a href="Network-Devices.html">Network devices</a></li>
+<li><a href="Command-Line.html">Command line</a></li>
+<li><a href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p><a href="https://github.com/abiesholihin/oscat/releases">Releases</a></p></aside><article><h1 id="oscat-v2">OSCAT v2</h1>
+<p><strong>OSCAT</strong> (One Stop CIS benchmark Auditing Tool) audits the configuration of servers and
+appliances against CIS benchmarks. It runs on one machine, usually an isolated jumphost,
+logs in to the hosts it audits, and produces Excel and PDF audit reports. Nothing is
+installed on the audited hosts.</p>
+<p><img alt="Scan results by host" src="images/3-scan-by-host.png" /></p>
+<h2 id="what-it-does">What it does</h2>
+<ul>
+<li><strong>Controls with several checks and logic.</strong> A control can run many commands and combine
+  their results with <code>and</code>, <code>or</code>, <code>not</code>, <code>at_least</code> and <code>if/then</code>.</li>
+<li><strong>Control dependencies.</strong> A control can run only when another control passed, and
+  otherwise be reported as not applicable or skipped.</li>
+<li><strong>CIS PDF import, offline.</strong> Upload a CIS benchmark PDF; OSCAT drafts a profile from it
+  without internet access (optionally helped by a local AI model) and you review each control.</li>
+<li><strong>More ways in.</strong> SSH with password or key, through a jump host; WinRM for Windows; the
+  REST API for Cisco APIC; privilege escalation with <code>sudo</code>, <code>sudo -i</code>, <code>sudo su -</code>, <code>su</code>, <code>dzdo</code>, <code>doas</code>, <code>pbrun</code> or <code>pmrun</code>.</li>
+<li><strong>Windows settings and web-managed appliances.</strong> Registry, security policy, user rights,
+  audit policy and services on Windows; the APIC management model for Cisco ACI.</li>
+<li><strong>Grouped scans.</strong> Scan tens to hundreds of hosts at once, by group or one by one.</li>
+<li><strong>Offline collector.</strong> For hosts the jumphost cannot reach, hand out a script whose
+  signed results file OSCAT evaluates like a normal scan.</li>
+<li><strong>Reports.</strong> Excel (cover, dashboard, details) and PDF reports per scan or per host, plus CSV.</li>
+</ul>
+<h2 id="pages">Pages</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="Installation.html">Installation</a></td>
+<td>Downloading a release and installing on Linux, Docker or Windows</td>
+</tr>
+<tr>
+<td><a href="First-Run-and-Administration.html">First run and administration</a></td>
+<td>Creating the first admin, users and roles, settings, backup, upgrade</td>
+</tr>
+<tr>
+<td><a href="Credentials-and-Targets.html">Credentials and targets</a></td>
+<td>Login accounts, hosts, groups, SSH, privilege escalation</td>
+</tr>
+<tr>
+<td><a href="Running-Scans.html">Running scans</a></td>
+<td>Starting a scan and reading its results</td>
+</tr>
+<tr>
+<td><a href="Reports.html">Reports</a></td>
+<td>Excel, PDF and CSV reports</td>
+</tr>
+<tr>
+<td><a href="Profiles.html">Profiles</a></td>
+<td>Bundled profiles and the profile format (checks, logic, dependencies)</td>
+</tr>
+<tr>
+<td><a href="Importing-CIS-PDFs.html">Importing a CIS benchmark PDF</a></td>
+<td>Drafting a profile from a PDF and reviewing it</td>
+</tr>
+<tr>
+<td><a href="Offline-Collector.html">Offline collector</a></td>
+<td>Auditing hosts the jumphost cannot reach</td>
+</tr>
+<tr>
+<td><a href="Windows-and-Cisco-APIC.html">Windows and Cisco APIC</a></td>
+<td>WinRM and APIC targets and checks</td>
+</tr>
+<tr>
+<td><a href="Command-Line.html">Command line</a></td>
+<td>The <code>oscat</code> and <code>oscat-server</code> commands</td>
+</tr>
+<tr>
+<td><a href="Troubleshooting.html">Troubleshooting</a></td>
+<td>Common problems and what to check</td>
+</tr>
+</tbody>
+</table>
+<h2 id="result-states">Result states</h2>
+<p>Every control on every host ends in one of these states:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pass</strong></td>
+<td>The host meets the control.</td>
+</tr>
+<tr>
+<td><strong>Fail</strong></td>
+<td>The host does not meet the control.</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>OSCAT could not collect or judge the evidence (connection lost, command missing, permission denied).</td>
+</tr>
+<tr>
+<td><strong>N/A</strong></td>
+<td>The control does not apply to this host (<code>applicable_if</code>, or a dependency that says so).</td>
+</tr>
+<tr>
+<td><strong>Skipped</strong></td>
+<td>A control it depends on did not reach the required result. The Observation names that control and its result.</td>
+</tr>
+<tr>
+<td><strong>Manual</strong></td>
+<td>The benchmark asks for a human judgement; evidence is gathered for the reviewer.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="getting-the-software">Getting the software</h2>
+<p>Installers for Linux (<code>.rpm</code>, <code>.deb</code>), Docker (<code>.run</code>) and Windows (<code>.exe</code>) are on the
+<a href="https://github.com/abiesholihin/oscat/releases">Releases page</a>. Start with
+<a href="Installation.html">Installation</a>.</p></article></div>
+<footer>OSCAT © 2026 · Independent tool, not affiliated with or endorsed by the Center for Internet Security. CIS and CIS Benchmarks are trademarks of CIS.</footer></body></html>
