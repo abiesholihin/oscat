@@ -581,7 +581,10 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
     { m: /\.deb$/, t: 'DEB package', d: 'Ubuntu, Debian', n: 'oscat_0.1.0-229_amd64.deb', s: 95157942 },
     { m: /docker\.run$/, t: 'Docker', d: 'Any Linux with Docker', n: 'oscat-0.1.0-229-docker.run', s: 291021518 },
     { m: /portable-windows.*\.zip$/, t: 'Portable Windows', d: 'Unzip and run, installs nothing', n: 'oscat-0.1.0-229-portable-windows-x64.zip', s: 72601649 },
-    { m: /portable-linux.*\.tar\.gz$/, t: 'Portable Linux', d: 'Unpack and run, installs nothing', n: 'oscat-0.1.0-229-portable-linux-x86_64.tar.gz', s: 96741946 }
+    { m: /portable-linux.*\.tar\.gz$/, t: 'Portable Linux', d: 'Unpack and run, installs nothing', n: 'oscat-0.1.0-229-portable-linux-x86_64.tar.gz', s: 96741946 },
+    // macOS builds: listed only once the latest release carries them
+    { m: /portable-macos-arm64.*\.tar\.gz$/, t: 'Portable Mac (Apple silicon)', d: 'macOS 13+, unpack and run ./start.sh', n: null, s: 0 },
+    { m: /portable-macos-x86_64.*\.tar\.gz$/, t: 'Portable Mac (Intel)', d: 'macOS 13+, unpack and run ./start.sh', n: null, s: 0 }
   ];
   var rel = { tag: 'oscat_v0.1.0-229', name: 'Build 229' };
   var base = 'https://github.com/abiesholihin/oscat/releases/download/';
@@ -590,6 +593,7 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
   function fill(menu) {
     var h = '';
     files.forEach(function (f) {
+      if (!f.n) return;
       h += '<a role="menuitem" data-file="' + f.t + '" href="' + base + rel.tag + '/' + f.n + '"><span><b>' + f.t + '</b><small>' + f.d + '</small></span><span class="sz">' + mb(f.s) + '</span></a>';
     });
     h += '<div class="foot"><span>' + rel.name + '</span><a href="' + base + rel.tag + '/SHA256SUMS">SHA256SUMS</a></div>';
