@@ -401,7 +401,7 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
   </div>
 </section>
 
-<section class="get">
+<section class="get" id="get">
   <div class="wrap">
     <h2>Get OSCAT</h2>
     <p>Installers for Windows Server, RHEL and SUSE (RPM), Ubuntu and Debian (DEB) and Docker, plus portable Windows and Linux builds that install nothing. Every download works without internet access.</p>
@@ -416,7 +416,7 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
     <h2>Get in touch</h2>
     <p class="sub">Questions, feedback or a bug to report? Send a message.</p>
     <form action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY">
+      <input type="hidden" name="access_key" value="630fc251-8682-4e38-9223-cb6ac3c09645">
       <input type="hidden" name="subject" value="New message from the OSCAT website">
       <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
       <div><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name"></div>
@@ -615,6 +615,13 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
       if (open) { wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
     });
   });
+  // count each download click in GoatCounter, per file
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('.dl-menu a[data-file]');
+    if (a && window.goatcounter && window.goatcounter.count) {
+      window.goatcounter.count({ path: 'download/' + a.getAttribute('data-file').toLowerCase().replace(/[^a-z0-9]+/g, '-'), title: 'Download: ' + a.getAttribute('data-file'), event: true });
+    }
+  });
   document.addEventListener('click', function () { document.querySelectorAll('.dl.open').forEach(function (d) { d.classList.remove('open'); }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.querySelectorAll('.dl.open').forEach(function (d) { d.classList.remove('open'); }); });
   // pick up newer releases without editing the site
@@ -645,5 +652,6 @@ nav .links a:hover{text-decoration:none;background-size:100% 1px}
   });
 })();
 </script>
+<script data-goatcounter="https://abiesholihin.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
